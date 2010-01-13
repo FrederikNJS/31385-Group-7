@@ -27,7 +27,7 @@ init(input * in, output * out)
 	    printf("Can't connect to rhd \n");
 	    exit(EXIT_FAILURE);
 	}
-    printf("connected to robot \n");
+    printf("Connected to robot \n");
 
     symTableElement *inputtable, *outputtable;
 
