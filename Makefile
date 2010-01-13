@@ -32,7 +32,7 @@ PROG   = smr
 HDRS   = 
 FILE   = main.c
 SRCS   = ${wildcard src/*.c src/*/*.c}
-OBJS   = ${wildcard src/*.o src/*/*.o}
+OBJS   = ${wildcard *.o s}
 HDRS2  = ${wildcard src/*.h src/*/*.h}
 
 
@@ -47,7 +47,7 @@ ${PROG}: ${OBJS}
 	echo ${OBJS}
 	echo ${@}
 	${LD} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
-	${LD} ${wildcard src/*.o src/*/*.o} -o smr ${LDFLAGS}  ${LIBS}
+	${LD} ${OBJS} -o smr ${LDFLAGS}  ${LIBS}
 	
 
 linker:
