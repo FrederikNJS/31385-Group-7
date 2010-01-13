@@ -1,3 +1,17 @@
+
+
+#OBJS = main.obj io.obj
+#CC = bcc
+#MODEL = s
+#CFLAGS = –m$(MODEL) 
+
+#project.exe : $(OBJS)
+#	tlink c0$(MODEL) $(OBJS), $(.TARGET),, c$(MODEL) /Lf:\bc\lib 
+
+#$(OBJS) : incl.h 
+
+
+
 #
 # The Compiler
 #
@@ -15,17 +29,32 @@ LIBS   = -lm /usr/local/smr/lib/librhd.a
 #
 PROG   = smr
 
-HDRS   =
+HDRS   = 
 FILE   = main.c
-OBJS   = main.o
+SRCS   = ${wildcard src/*.c src/*/*.c}
+OBJS   = ${wildcard src/*.o src/*/*.o}
+HDRS2  = ${wildcard src/*.h src/*/*.h}
+
+
+%.o : %.c
+%src/*/*.o : %src/*/*.c
+#	${CC} ${CFLAGS} –c ${.SOURCE}
 
 all: ${PROG}
 
 ${PROG}: ${OBJS}
-	${LD} -o ${@} ${LDFLAGS} src/${FILE} ${LIBS}
+	echo ${HDRS2}
+	echo ${OBJS}
+	echo ${@}
+	${LD} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
+	${LD} ${wildcard src/*.o src/*/*.o} -o smr ${LDFLAGS}  ${LIBS}
+	
+
+linker:
+	echo "win"	
 
 clean:
-	rm -f ${OBJS} ${PROG} 
+	rm -f ${OBJS} ${PROG}
 
 
 ${OBJS}: ${HDRS} Makefile

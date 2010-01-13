@@ -1,21 +1,28 @@
-#include "main.h"
+
+#ifndef _task_h
+#define _task_h
+
+#include "../main.h"
+#include <stdlib.h>
+
+enum task_states
+{ T_FORWARD, T_TURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT, T_FOLLOW_STRAIGHT,
+    T_FOLLOW_LEFT, T_STOP, T_FINISHED
+};
 
 enum
-{ FORWARD, TURN, REVERSE, WAIT, FOLLOW, FOLLOW_RIGHT, FOLLOW_STRAIGHT,
-    FOLLOW_LEFT, STOP, FINISHED
-} task;
-
-enum
-{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, INFRARED = 1 << 3 } trigger;
+{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, INFRARED = 1 << 3 };
 
 typedef struct
 {
-    int speed;			//sets the maxspeed
-    char distance_enable;	//1 of odometry should be checked, 0 if not
+    int speed;			//set the maxspeed
+    int triggers;		//Which sensors should trigger state change
     double distance;		//in centimeters
-    double ir_distance[];	//in centimeters
+    double ir_distance[5];	//in centimeters
     double time;		//in seconds
     int line;			//special case for the line sensor
 } task_parameters;
 
-int task(int task_id, int trigger, input * in, output * out);
+int task(int task_id, task_parameters * parameters, input * in, output * out);
+
+#endif

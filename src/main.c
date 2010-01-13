@@ -1,5 +1,11 @@
-#include "main.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "rhd.h"
+#include "main.h"
+#include "mission/mission.h"
+#include "mission/task.h"
 
 int
 main(int argc, char **argv)
@@ -7,58 +13,61 @@ main(int argc, char **argv)
     if(argc < 2)
 	{
 	    printf("Usage: smr <speed>\n");
-	    exit(EXIT_FAILURE);
+	    return ERROR;
 	}
 
     input in;
     output out;
 
-    init(&in, &out);
+    int result = init(&in, &out);
+	if (result) {return result;}
     mission(atoi(argv[1]), &in, &out);
     term(&out);
-    exit(0);
+    return 0;
 }
 
-void
+int
 init(input * in, output * out)
 {
-    if(rhdConnect('w', "localhost", ROBOTPORT) != 'w')
+    if(rhdConnect('w', "localhost", ROBOT_PORT) != 'w')
 	{
 	    printf("Can't connect to rhd \n");
-	    exit(EXIT_FAILURE);
+	    return ERROR;
 	}
     printf("Connected to robot \n");
 
-    symTableElement *inputtable, *outputtable;
+    symTableElement *input_table, *output_table;
 
-    if((inputtable = getSymbolTable('r')) == NULL)
+    if((input_table = getSymbolTable('r')) == NULL)
 	{
 	    printf("Can't connect to rhd \n");
-	    exit(EXIT_FAILURE);
+	    return ERROR;
 	}
-    if((outputtable = getSymbolTable('w')) == NULL)
+    if((output_table = getSymbolTable('w')) == NULL)
 	{
 	    printf("Can't connect to rhd \n");
-	    exit(EXIT_FAILURE);
+	    return ERROR;
 	}
+ 	
+    out->encoder_left = getinputref("encl", input_table);
+    out->encoder_right = getinputref("encl", input_table);
+    out->line_sensor = getinputref("linesensor", input_table);
+    out->ir_sensor = getinputref("irsensor", input_table);
 
-    in->encoder_left = getinputref("encl", input_table);
-    in->encoder_right = getinputref("encl", input_table);
-    in->line_sensor = getinputref("linesensor", input_table);
-    in->ir_sensor = getinputref("irsensor", input_table);
-
-    out->speed_left = getoutputref("speedl", output_table);
-    out->speed_right = getoutputref("speedr", output_table);
-    out->reset_motor_left = getoutputref("resetmotorr", output_table);
-    out->reset_motor_right = getoutputref("resetmotorl", output_table);
+    in->speed_left = getoutputref("speedl", output_table);
+    in->speed_right = getoutputref("speedr", output_table);
+    in->reset_motor_left = getoutputref("resetmotorr", output_table);
+    in->reset_motor_right = getoutputref("resetmotorl", output_table);
 
     rhdSync();
+
+	return 0;
 }
 
 void
 term(output * out)
 {
-    task(task.stop, trigger.none);
+    task(T_STOP, NULL, NULL, out);
     rhdSync();
     rhdDisconnect();
 }

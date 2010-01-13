@@ -1,3 +1,5 @@
+/*
+
 #define LINESENSOR_N 8
 #define IRSENSOR_N 5
 
@@ -18,3 +20,5 @@ struct calibration {
 	int ir_ka[IRSENSOR_N];
 	int ir_kb[IRSENSOR_N];
 }
+
+*/

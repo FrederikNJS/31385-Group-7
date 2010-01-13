@@ -1,3 +1,5 @@
+/*
+
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <stdio.h>
@@ -52,3 +54,4 @@ void calibrate_linesensors(struct calibration * calibration) {
                 calibration->ln_white[j] /= MEASUREMENTS_N;
         }
 }
+*/

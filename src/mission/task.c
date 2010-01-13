@@ -1,8 +1,9 @@
+#include <time.h>
 #include "task.h"
-#include "time.h"
+#include "../odometry/odometry.h"
+#include "../motion/motion.h"
 
-int
-task(int task_id, task_parameters parameters)
+int task(int task_id, task_parameters * parameters, input * in, output * out)
 {
     int task_finished = 0;
     long task_start = time(NULL);
@@ -10,45 +11,46 @@ task(int task_id, task_parameters parameters)
 	{
 	    rhdSync();
 	    //Sensor Checking, and reactions
-	    if(sensor_trigger & TIME)
+	    if(parameters->triggers & TIME)
 		{
-		    if(time(NULL) >= task_start + time_trigger)
+		    if(time(NULL) >= task_start + parameters->time)
 			{
-			    task_id = FINISHED;
+			    task_id = T_FINISHED;
 			}
 		}
-	    if(sensor_trigger & ODOMETRY)
+	    if(parameters->triggers & ODOMETRY)
 		{
-		    if(odometry() >= 0 /*odometry distance*/)
+		    if(parameters->distance >= 0 /*odometry distance*/)
 			{
-				task_id = FINISHED;
+				task_id = T_FINISHED;
 			}
 		}
 
 	    //Task State Machine
 	    switch (task_id)
 		{
-		case FORWARD:
-		    forward();
+		case T_FORWARD:
+		    forward(parameters->speed);
 		    break;
-		case TURN:
+		case T_TURN:
 		    break;
-		case REVERSE:
+		case T_REVERSE:
 		    break;
-		case WAIT:
+		case T_WAIT:
 		    break;
-		case FOLLOW:
+		case T_FOLLOW:
 		    break;
-		case FOLLOW_RIGHT:
+		case T_FOLLOW_RIGHT:
 		    break;
-		case FOLLOW_STRAIGHT:
+		case T_FOLLOW_STRAIGHT:
 		    break;
-		case FOLLOW_LEFT:
+		case T_FOLLOW_LEFT:
 		    break;
-		case STOP:
+		case T_STOP:
 		    break;
-		case FINISHED:
+		case T_FINISHED:
 		    break;
 		}
 	}
+	return 0;
 }

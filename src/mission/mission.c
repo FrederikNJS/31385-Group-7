@@ -1,23 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
+#include "mission.h"
+#include "task.h"
+#include "../main.h"
+
 void
 mission(int speed, input * in, output * out)
 {
     char finished = 0;
+	int state = M_START;
     do
 	{
 	    //Mission State Machine
-	    switch (mission.state)
+	    switch (state)
 		{
-		case state.finished:
-		    task(task.stop, trigger.none, in, out);
+		case M_FINISHED:
+		    task(T_STOP, NULL, in, out);
 		    finished = 1;
 		    break;
 		}
 
 	    //Stop if keyboard is activated
+		void * arg;
 	    ioctl(0, FIONREAD, &arg);
 	    if(arg != 0)
 		{
-		    mission.state = state.finished;
+		    state = M_FINISHED;
 		}
 	}
     while(!finished);
