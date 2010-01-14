@@ -1,5 +1,3 @@
-/*
-
 #include <sys/ioctl.h>
 #include <errno.h>
 #include <stdio.h>
@@ -7,6 +5,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "rhd.h"
+#include "infrared/infrared.h"
+#include "linesensor/linesensor.h"
 
 void load_calibration(struct calibration * calibration) {
 	FILE * file;
@@ -43,7 +43,7 @@ void load_calibration(struct calibration * calibration) {
 			calibration->ln_white[i] = LN_DEFAULT_WHITE;
 		}
 	}
-	file = fopen("../../Calibration/inferredsensors.dat", "r");
+	file = fopen("../../Calibration/infraredsensors.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
@@ -58,7 +58,7 @@ void load_calibration(struct calibration * calibration) {
 		calibration->ir_ka[4] = atoi(strtok(NULL, " "));
 		calibration->ir_kb[4] = atoi(strtok(NULL, " "));
 	} else {
-		printf("ERROR: Could not read inferred sensor file (errno: %d)\n", errno);
+		printf("ERROR: Could not read infrared sensor file (errno: %d)\n", errno);
 		printf("Using standard values\n");
 		for(i = 0; i < IRSENSORS_N; i++) {
 			calibration->ir_ka[i] = IR_DEFAULT_KA;
@@ -98,7 +98,7 @@ void save_calibration(struct calibration * calibration) {
 		} else {
 			printf("ERROR: Linesensor values not saved (errno: %d)\n", errno);
 		}
-		file = fopen("../../Calibration/inferredsensors.dat", "w+");
+		file = fopen("../../Calibration/infraredsensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < IRSENSORS_N; i++) {
 				length += sprintf(data[length], "%d ", calibration->ir_ka[i]);
@@ -109,7 +109,7 @@ void save_calibration(struct calibration * calibration) {
 			fclose(file);
 			length = 0;
 		} else {
-			printf("ERROR: Inferred sensor values not saved (errno: %d)\n", errno);
+			printf("ERROR: infrared sensor values not saved (errno: %d)\n", errno);
 		}
 		file = fopen("../../Calibration/odometry.dat", "w+");
 		if(file) {
@@ -181,7 +181,7 @@ void calibrate_irsensors(struct calibration * calibration) {
 	ts.tv_sec = 0;
 	ts.tv_nsec = 200000000;
 	empty_stdin();
-	wait_for_enter("Place an obstacle 15 centimeters away from each of the inferred sensors\n");
+	wait_for_enter("Place an obstacle 15 centimeters away from each of the infrared sensors\n");
 	for(i = 0; i < 9; i++) {
 		for(j = 0; j < MEASUREMENTS_N; j++) {
 			rhdSync();
@@ -213,8 +213,8 @@ void calibrate_irsensors(struct calibration * calibration) {
 		calibration->ir_kb[4] = atof(strtok(NULL, " "));
 		calibration->updated = 1;
 	} else {
-		printf("ERROR: Could not save values read from the inferred sensors\n")
-		printf("No calibration of the inferred sensors can be done\n");
+		printf("ERROR: Could not save values read from the infrared sensors\n")
+		printf("No calibration of the infrared sensors can be done\n");
 	}
 }
 
@@ -222,4 +222,4 @@ void calibrate_irsensors(struct calibration * calibration) {
 void calibrate_odometry(struct calibration * calibration) {
 	calibration->updated = 1;
 }
-*/
+
