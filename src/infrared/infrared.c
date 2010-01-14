@@ -1,9 +1,11 @@
 #include "calibration/calibration.h"
+#include "infrared.h"
 
 int read_irsensor_raw(int no) {
-	return 0;
+	extern output out;
+	return out.irsensor->data[no];
 }
 
 int read_irsensor_calibrated(int no, struct calibration * calibration) {
-	return 0;
+	return calibration->ir_ka[no] / ((double) read_irsensor_raw(no) - calibration->ir_kb[no]);
 }
