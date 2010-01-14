@@ -1,4 +1,5 @@
 #include <time.h>
+#include <stdio.h>
 
 #include "../motion/motion.h"
 #include "../odometry/odometry.h"
@@ -15,6 +16,13 @@ task(int task_id, task_parameters * parameters)
 	    //Synchronize and update odometry.
 	    rhdSync();
 	    update_odometry(get_general_odometry());
+	    current_odometry.left_encoder = out.encoder_left->data[0];
+    	current_odometry.right_encoder = out.encoder_right->data[0];
+		update_odometry(&current_odometry);
+
+		current_distance = current_odometry.x;
+		printf("r, l is:  %d,  %d\n", out.encoder_right->data[0], out.encoder_left->data[0]);
+		printf("x, y is:  %f,  %f\n", current_distance, current_odometry.y);
 
 	    //Sensor Checking, and reactions
 	    if(parameters->triggers & TIME)
@@ -27,17 +35,20 @@ task(int task_id, task_parameters * parameters)
 	    if(parameters->triggers & ODOMETRY)
 		{
 		    if(task_id & T_TURN)
-			{
-
-			}
+			printf("In check for length: %f \n", current_distance - parameters->distance);
+		    
 		    else if(task_id & T_OCTURN)
 			{
 
 			}
 		    else
 			{
+				if(current_distance - parameters->distance >= 0 /*odometry distance */ )
+				{
 
+				}
 			}
+			
 		}
 	    if(parameters->triggers & LINE)
 		{
@@ -52,8 +63,8 @@ task(int task_id, task_parameters * parameters)
 	    switch (task_id)
 		{
 		case T_FORWARD:
-		    forward(parameters->speed, current_distance,
-			    parameters->distance);
+			printf("Forward.\n");
+		    forward(parameters->speed, current_distance, parameters->distance);
 		    break;
 		case T_TURN:
 		    break;
@@ -85,5 +96,9 @@ task(int task_id, task_parameters * parameters)
 		    task_state = T_FINISHED;
 		}
 	}
+
+	//Remember to inform the hardware about the recent changes.
+
+
     return 0;
 }

@@ -8,10 +8,14 @@
 void
 mission(int speed)
 {
+
+    printf("Mission entered.\n");
     char finished = 0;
     int state = M_START;
 
-	int mission[] = {M_START, M_SQUARE, M_FINISHED}
+    int mission[] = { M_START, M_SQUARE, M_FINISHED };
+
+    task_parameters para;
 
     do
 	{
@@ -19,8 +23,16 @@ mission(int speed)
 	    switch (state)
 		{
 		case M_START:
-		    state = M_SQUARE;
+		    printf("Entered start mission.\n");
+		    para.speed = speed;
+		    para.distance = 100.0;
+		    para.triggers = 0;
+		    para.triggers |= ODOMETRY;
+		    task(T_FORWARD, &para);
+		    state = M_FINISHED;
+		    break;
 		case M_FINISHED:
+		    printf("Entered ending mission.\n");
 		    task(T_STOP, NULL);
 		    finished = 1;
 		    break;
@@ -28,10 +40,9 @@ mission(int speed)
 		    int i;
 		    for(i = 0; i < 4; i++)
 			{
-			    task(T_FORWARD,);
-			    task(T_TURN,);
+			    //task(T_FORWARD,);
+			    //task(T_TURN,);
 			}
-		    state = M_FINISHED;
 		    break;
 		}
 	}

@@ -26,10 +26,6 @@ main(int argc, char **argv)
 	{
 	    return result;
 	}
-	//Initialise and reset the general odometry structure,
-	//which will keep the movement throughout all missions.
-	//
-	reset_odometry(get_general_odometry());
 
 	//Perform the standard mission given the speed from the command line
 	//and the current odometry.
@@ -71,6 +67,11 @@ init()
     in.speed_right = getoutputref("speedr", output_table);
     in.reset_motor_left = getoutputref("resetmotorr", output_table);
     in.reset_motor_right = getoutputref("resetmotorl", output_table);
+	
+	//Initialise and reset the general odometry structure,
+	//which will keep the movement throughout all missions.
+	//
+	reset_odometry(&current_odometry);
 
     rhdSync();
 

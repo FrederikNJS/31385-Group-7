@@ -13,6 +13,8 @@
 #define WHEEL_SEPARATION 0.252	/* m */
 #define DELTA_M (M_PI * WHEEL_DIAMETER / 2000.0)
 
+extern struct odometry_state current_odometry;
+
 /*Odometry state struct.
 This structure contains the current state of the odometry.
 It should always be updated during missions at each rhdSync,
@@ -40,7 +42,5 @@ void update_odometry(struct odometry_state * current_odometry);
 /*Resets odometry state. Always call this before missions, and call it
 when positioning/angle data should be reset.*/
 void reset_odometry(struct odometry_state * current_odometry);
-/**Returns the general odometry state.*/
-struct odometry_state * get_general_odometry(void);
 
 #endif

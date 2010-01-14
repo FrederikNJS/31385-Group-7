@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 #include "odometry.h"
 
 struct odometry_state current_odometry;
@@ -60,6 +61,8 @@ void update_odometry(struct odometry_state * p) {
     //if (p->angle < 0) p->angle += M_PI*2;
     p->x = p->old_x + dU * cos(p->angle);
     p->y = p->old_y + dU * sin(p->angle);
+
+	printf("state_odo: x:%f, y:%f, dU:%f, dO%f\n", p->x, p->y, dU, dO);
 }
 
 void reset_odometry(struct odometry_state * p)
@@ -69,6 +72,10 @@ void reset_odometry(struct odometry_state * p)
     p->old_x = p->old_y = p->old_angle = 0.0;
     p->right_encoder_old = p->right_encoder;
     p->left_encoder_old = p->left_encoder;
+
+    p->w = WHEEL_DIAMETER;
+    p->cr = DELTA_M;
+    p->cl = p->cr;
 }
 
 struct odometry_state * get_general_odometry(void) {
