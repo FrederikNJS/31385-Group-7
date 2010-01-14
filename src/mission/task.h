@@ -2,8 +2,9 @@
 #ifndef _task_h
 #define _task_h
 
-#include "../main.h"
 #include <stdlib.h>
+#include "../main.h"
+#include "../odometry/odometry.h"
 
 enum task_states
 { T_FORWARD, T_TURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT,
