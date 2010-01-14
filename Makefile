@@ -44,12 +44,18 @@ all: ${PROG}
 
 #%.o : %src/*. %src/*/*.c
 
-${OBJS} : ${SRCS} ${HDRS2}
-	${LD} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
+#${PROG}: ${OBJS}
+#	${CC} ${OBJS} -o smr ${LDFLAGS}  ${LIBS}
+#
+#${OBJS} : ${SRCS} ${HDRS2}
+#	echo ${OBJS}
+#	${LD} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
+${PROG}: ${SRCS} ${HDRS2}
+	${CC} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
+	${LD} *.o -o smr ${LDFLAGS}  ${LIBS}
 
-${PROG}: ${OBJS}
-	${LD} ${wildcard *.o} -o smr ${LDFLAGS}  ${LIBS}
-
+#${OBJS} : 
+#	echo ${OBJS}
 
 linker:
 	echo "win"	

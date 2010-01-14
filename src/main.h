@@ -6,7 +6,9 @@
 #include "rhd.h"
 
 #define ERROR 		1
-#define ROBOT_PORT	24902
+#define ROBOT_PORT	DEFAULTPORT
+#define LINESENSOR_N 8
+#define IRSENSOR_N 5
 
 typedef struct
 {
