@@ -1,12 +1,15 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "rhd.h"
+
 #include "main.h"
 #include "mission/mission.h"
 #include "mission/task.h"
 
+input in;
+output out;
 
 int
 main(int argc, char **argv)
@@ -17,18 +20,18 @@ main(int argc, char **argv)
 	    return ERROR;
 	}
 
-    input in;
-    output out;
-
-    int result = init(&in, &out);
-	if (result) {return result;}
-    mission(atoi(argv[1]), &in, &out);
+    int result = init();
+    if(result)
+	{
+	    return result;
+	}
+    mission(atoi(argv[1]));
     term(&out);
     return 0;
 }
 
 int
-init(input * in, output * out)
+init()
 {
     if(rhdConnect('w', "localhost", ROBOT_PORT) != 'w')
 	{
@@ -49,26 +52,26 @@ init(input * in, output * out)
 	    printf("Can't connect to rhd \n");
 	    return ERROR;
 	}
- 	
-    out->encoder_left = getinputref("encl", input_table);
-    out->encoder_right = getinputref("encl", input_table);
-    out->line_sensor = getinputref("linesensor", input_table);
-    out->ir_sensor = getinputref("irsensor", input_table);
 
-    in->speed_left = getoutputref("speedl", output_table);
-    in->speed_right = getoutputref("speedr", output_table);
-    in->reset_motor_left = getoutputref("resetmotorr", output_table);
-    in->reset_motor_right = getoutputref("resetmotorl", output_table);
+    out.encoder_left = getinputref("encl", input_table);
+    out.encoder_right = getinputref("encl", input_table);
+    out.line_sensor = getinputref("linesensor", input_table);
+    out.ir_sensor = getinputref("irsensor", input_table);
+
+    in.speed_left = getoutputref("speedl", output_table);
+    in.speed_right = getoutputref("speedr", output_table);
+    in.reset_motor_left = getoutputref("resetmotorr", output_table);
+    in.reset_motor_right = getoutputref("resetmotorl", output_table);
 
     rhdSync();
 
-	return 0;
+    return 0;
 }
 
 void
-term(output * out)
+term()
 {
-    task(T_STOP, NULL, NULL, out);
+    task(T_STOP, NULL);
     rhdSync();
     rhdDisconnect();
 }

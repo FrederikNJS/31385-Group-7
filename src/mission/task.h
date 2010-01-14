@@ -6,7 +6,8 @@
 #include <stdlib.h>
 
 enum task_states
-{ T_FORWARD, T_TURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT, T_FOLLOW_STRAIGHT,
+{ T_FORWARD, T_TURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT,
+	T_FOLLOW_STRAIGHT,
     T_FOLLOW_LEFT, T_STOP, T_FINISHED
 };
 
@@ -23,6 +24,6 @@ typedef struct
     int line;			//special case for the line sensor
 } task_parameters;
 
-int task(int task_id, task_parameters * parameters, input * in, output * out);
+int task(int task_id, task_parameters * parameters);
 
 #endif
