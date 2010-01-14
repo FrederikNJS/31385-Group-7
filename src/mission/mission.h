@@ -7,6 +7,6 @@ enum mission_states
 { M_START, M_FINISHED
 };
 
-void mission(int speed, input * in, output * out);
+void mission(int speed);
 
 #endif

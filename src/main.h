@@ -1,7 +1,5 @@
-
 #ifndef _main_h
 #define _main_h
-
 
 #include "rhd.h"
 
@@ -19,8 +17,8 @@ typedef struct
     symTableElement *encoder_left, *encoder_right, *line_sensor, *ir_sensor;
 } output;
 
-int init(input * in, output * out);
-void term(output * out);
+int init();
+void term();
 
 symTableElement *getinputref(const char *sym_name, symTableElement * tab);
 symTableElement *getoutputref(const char *sym_name, symTableElement * tab);

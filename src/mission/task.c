@@ -1,13 +1,16 @@
 #include <time.h>
-#include "task.h"
-#include "../odometry/odometry.h"
-#include "../motion/motion.h"
 
-int task(int task_id, task_parameters * parameters, input * in, output * out)
+#include "../motion/motion.h"
+#include "../odometry/odometry.h"
+
+#include "task.h"
+
+int
+task(int task_id, task_parameters * parameters)
 {
-    int task_finished = 0;
     long task_start = time(NULL);
-    while(!task_finished)
+	double current_distance = 0.0;
+    while(task_id != T_FINISHED)
 	{
 	    rhdSync();
 	    //Sensor Checking, and reactions
@@ -20,9 +23,9 @@ int task(int task_id, task_parameters * parameters, input * in, output * out)
 		}
 	    if(parameters->triggers & ODOMETRY)
 		{
-		    if(parameters->distance >= 0 /*odometry distance*/)
+		    if(parameters->distance >= 0 /*odometry distance */ )
 			{
-				task_id = T_FINISHED;
+			    task_id = T_FINISHED;
 			}
 		}
 
@@ -30,7 +33,7 @@ int task(int task_id, task_parameters * parameters, input * in, output * out)
 	    switch (task_id)
 		{
 		case T_FORWARD:
-		    forward(parameters->speed);
+		    forward(parameters->speed, current_distance, parameters->distance);
 		    break;
 		case T_TURN:
 		    break;
@@ -52,5 +55,5 @@ int task(int task_id, task_parameters * parameters, input * in, output * out)
 		    break;
 		}
 	}
-	return 0;
+    return 0;
 }
