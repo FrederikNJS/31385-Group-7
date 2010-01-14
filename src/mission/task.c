@@ -28,6 +28,12 @@ task(int task_id, task_parameters * parameters)
 			    task_id = T_FINISHED;
 			}
 		}
+		if(parameters->triggers & LINE) {
+			
+		}
+		if(parameters->triggers & INFRARED) {
+			
+		}
 
 	    //Task State Machine
 	    switch (task_id)
