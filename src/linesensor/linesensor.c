@@ -80,7 +80,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 	//it have detected a cross road
 	if(start1 <= 0 && end1 >= LINESENSOR_N) {
 		situation = -3;
-	} else if(start1 == 0 && end1 >= (LINESENSOR_N / 2) {
+	} else if(start1 == 0 && end1 >= (LINESENSOR_N / 2)) {
 		//If all the sensors from left to the middle is within the first streak
 		//it have detected a left turn
 		situation = -1;
