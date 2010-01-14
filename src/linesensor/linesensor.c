@@ -1,10 +1,10 @@
 #include "../calibration/calibration.h"
 #include "linesensor.h"
-#include "main.h"
+#include "../main.h"
 
 int read_linesensor_raw(int no) {
 	extern output out;
-	return out.linesensor->data[no];
+	return out.line_sensor->data[no];
 }
 
 int read_linesensor_calibrated(int no, struct calibration * calibration) {

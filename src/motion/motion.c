@@ -6,7 +6,7 @@ forward(int speed, double current_distance, double expected_distance)
 {
     extern input in;
 
-    mod_speed = speed_calc(speed, current_distance, expected_distance);
+    int mod_speed = speed_calc(speed, current_distance, expected_distance);
 
     if(in.speed_left->data[0] != mod_speed)
 	{
