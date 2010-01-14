@@ -6,6 +6,7 @@
 
 
 int read_irsensor_raw(int no);
-int read_irsensor_calibrated(int no, struct calibration * calibration);
+double read_irsensor_distance(int no, struct calibration * calibration);
+int is_closer_than(int no, double dist, struct calibration * calibration);
 
 #endif
