@@ -54,7 +54,6 @@ ${PROG}: ${SRCS} ${HDRS2}
 	rm -f src/*.gch src/*/*.gch
 	${CC} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
 	${LD} *.o -o smr ${LDFLAGS}  ${LIBS}
-	echo yeah
 	rm -f src/*.gch src/*/*.gch
 
 #${OBJS} : 
