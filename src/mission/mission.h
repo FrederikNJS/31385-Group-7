@@ -4,8 +4,7 @@
 
 #include "../main.h"
 enum mission_states
-{ M_START, M_FINISHED
-};
+{ M_START, M_FINISHED, M_SQUARE };
 
 void mission(int speed);
 

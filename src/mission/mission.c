@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ioctl.h>
 #include "mission.h"
 #include "task.h"
 #include "../main.h"
@@ -12,6 +11,7 @@ mission(int speed)
     printf("Mission entered.\n");
     char finished = 0;
     int state = M_START;
+    int i;
 
     task_parameters para;
 
@@ -26,10 +26,10 @@ mission(int speed)
 		    para.distance = 100.0;
 		    para.triggers = ODOMETRY;
 		    task(T_FORWARD, &para);
-		    state = M_FINISHED;
+		    finished = 1;
 		    break;
 		case M_SQUARE:
-		    int i;
+
 		    for(i = 0; i < 4; i++)
 			{
 			    //task(T_FORWARD,);
@@ -40,6 +40,6 @@ mission(int speed)
 	}
     while(!finished);
 
-	printf("ending mission.\n");
+    printf("Ending mission.\n");
     task(T_STOP, NULL);
 }

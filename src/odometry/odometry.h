@@ -42,5 +42,6 @@ void update_odometry(struct odometry_state * current_odometry);
 /*Resets odometry state. Always call this before missions, and call it
 when positioning/angle data should be reset.*/
 void reset_odometry(struct odometry_state * current_odometry);
+struct odometry_state * get_general_odometry(void);
 
 #endif
