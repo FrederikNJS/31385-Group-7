@@ -8,6 +8,8 @@
 void
 mission(int speed)
 {
+
+	printf("Mission entered.\n");
     char finished = 0;
     int state = M_START;
 	
@@ -16,10 +18,23 @@ mission(int speed)
 	    //Mission State Machine
 	    switch (state)
 		{
-		case M_FINISHED:
-		    task(T_STOP, NULL);
-		    finished = 1;
-		    break;
+			case M_FINISHED: {
+				printf("Entered ending mission.\n");
+			    task(T_STOP, NULL);
+			    finished = 1;
+			    break;
+			}
+			case M_START: {
+				printf("Entered start mission.\n");
+				task_parameters para;
+				para.speed = speed;
+				para.distance = 100.0;
+				para.triggers = 0;
+				para.triggers |= ODOMETRY;
+				task(T_FORWARD, &para);
+				state = M_FINISHED;
+				break;
+			}
 		}
 
 	    //Stop if keyboard is activated

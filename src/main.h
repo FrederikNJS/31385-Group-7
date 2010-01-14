@@ -19,6 +19,9 @@ typedef struct
     symTableElement *encoder_left, *encoder_right, *line_sensor, *ir_sensor;
 } output;
 
+extern input in;
+extern output out;
+
 int init();
 void term();
 
