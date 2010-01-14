@@ -1,6 +1,7 @@
 
 #include "../calibration/calibration.h"
 #include "infrared.h"
+#include "main.h"
 
 int read_irsensor_raw(int no) {
 	extern output out;
