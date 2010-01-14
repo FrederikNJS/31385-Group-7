@@ -10,24 +10,29 @@ mission(int speed)
 {
     char finished = 0;
     int state = M_START;
-	
+
+	int mission[] = {M_START, M_SQUARE, M_FINISHED}
+
     do
 	{
 	    //Mission State Machine
 	    switch (state)
 		{
+		case M_START:
+		    state = M_SQUARE;
 		case M_FINISHED:
 		    task(T_STOP, NULL);
 		    finished = 1;
 		    break;
-		}
-
-	    //Stop if keyboard is activated
-	    void *arg;
-	    ioctl(0, FIONREAD, &arg);
-	    if(arg != 0)
-		{
+		case M_SQUARE:
+		    int i;
+		    for(i = 0; i < 4; i++)
+			{
+			    task(T_FORWARD,);
+			    task(T_TURN,);
+			}
 		    state = M_FINISHED;
+		    break;
 		}
 	}
     while(!finished);

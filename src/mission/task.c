@@ -9,12 +9,12 @@ int
 task(int task_id, task_parameters * parameters)
 {
     long task_start = time(NULL);
-	double current_distance = 0.0;
+    double current_distance = 0.0;
     while(task_id != T_FINISHED)
 	{
-		//Synchronize and update odometry.
+	    //Synchronize and update odometry.
 	    rhdSync();
-		update_odometry(get_general_odometry());
+	    update_odometry(get_general_odometry());
 
 	    //Sensor Checking, and reactions
 	    if(parameters->triggers & TIME)
@@ -26,25 +26,38 @@ task(int task_id, task_parameters * parameters)
 		}
 	    if(parameters->triggers & ODOMETRY)
 		{
-		    if(parameters->distance >= 0 /*odometry distance */ )
+		    if(task_id & T_TURN)
 			{
-			    task_id = T_FINISHED;
+
+			}
+		    else if(task_id & T_OCTURN)
+			{
+
+			}
+		    else
+			{
+
 			}
 		}
-		if(parameters->triggers & LINE) {
-			
+	    if(parameters->triggers & LINE)
+		{
+
 		}
-		if(parameters->triggers & INFRARED) {
-			
+	    if(parameters->triggers & INFRARED)
+		{
+
 		}
 
 	    //Task State Machine
 	    switch (task_id)
 		{
 		case T_FORWARD:
-		    forward(parameters->speed, current_distance, parameters->distance);
+		    forward(parameters->speed, current_distance,
+			    parameters->distance);
 		    break;
 		case T_TURN:
+		    break;
+		case T_OCTURN:
 		    break;
 		case T_REVERSE:
 		    break;
@@ -62,6 +75,14 @@ task(int task_id, task_parameters * parameters)
 		    break;
 		case T_FINISHED:
 		    break;
+		}
+
+	    //Stop if keyboard is activated
+	    void *arg;
+	    ioctl(0, FIONREAD, &arg);
+	    if(arg != 0)
+		{
+		    task_state = T_FINISHED;
 		}
 	}
     return 0;
