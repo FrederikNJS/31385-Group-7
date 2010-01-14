@@ -13,8 +13,6 @@ mission(int speed)
     char finished = 0;
     int state = M_START;
 
-    int mission[] = { M_START, M_SQUARE, M_FINISHED };
-
     task_parameters para;
 
     do
@@ -26,15 +24,9 @@ mission(int speed)
 		    printf("Entered start mission.\n");
 		    para.speed = speed;
 		    para.distance = 100.0;
-		    para.triggers = 0;
-		    para.triggers |= ODOMETRY;
+		    para.triggers = ODOMETRY;
 		    task(T_FORWARD, &para);
 		    state = M_FINISHED;
-		    break;
-		case M_FINISHED:
-		    printf("Entered ending mission.\n");
-		    task(T_STOP, NULL);
-		    finished = 1;
 		    break;
 		case M_SQUARE:
 		    int i;
@@ -47,4 +39,7 @@ mission(int speed)
 		}
 	}
     while(!finished);
+
+	printf("ending mission.\n");
+    task(T_STOP, NULL);
 }
