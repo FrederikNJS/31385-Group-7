@@ -84,7 +84,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		//If all the sensors from left to the middle is within the first streak
 		//it have detected a left turn
 		situation = -1;
-	} else if(start1 < (LINESENSOR_N / 2) && end1 == (LINESENSOR_N - 1) {
+	} else if(start1 < (LINESENSOR_N / 2) && end1 == (LINESENSOR_N - 1)) {
 		//If all the sensors from the middle to the right is within the first streak
 		//it have detected a right turn
 		situation = -2;
