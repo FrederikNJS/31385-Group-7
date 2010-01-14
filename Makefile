@@ -32,7 +32,7 @@ PROG   = smr
 HDRS   = 
 FILE   = main.c
 SRCS   = ${wildcard src/*.c src/*/*.c}
-OBJS   = ${wildcard src/*.c=*.o src/*/*.c=*.o}
+OBJS   = ${SRCS:.c=.o}
 HDRS2  = ${wildcard src/*.h src/*/*.h}
 
 
@@ -44,21 +44,18 @@ all: ${PROG}
 
 #%.o : %src/*. %src/*/*.c
 
-main.o : ${SRCS}
+${OBJS} : ${SRCS} ${HDRS2}
 	${LD} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
 
-${OBJS} : ${SRCS}
-	echo ${OBJS}
-
-${PROG}: main.o
+${PROG}: ${OBJS}
 	${LD} ${wildcard *.o} -o smr ${LDFLAGS}  ${LIBS}
-	
+
 
 linker:
 	echo "win"	
 
 clean:
-	rm -f ${OBJS} ${PROG}
+	rm -f ${wildcard *.o} ${PROG}
 
 
 ${OBJS}: ${HDRS} Makefile

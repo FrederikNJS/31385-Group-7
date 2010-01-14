@@ -5,8 +5,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "rhd.h"
-#include "infrared/infrared.h"
-#include "linesensor/linesensor.h"
+#include "../infrared/infrared.h"
+#include "../linesensor/linesensor.h"
+#include "calibration.h"
+#include "../main.h"
 
 void load_calibration(struct calibration * calibration) {
 	FILE * file;

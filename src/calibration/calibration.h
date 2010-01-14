@@ -1,3 +1,8 @@
+#ifndef _calibration_h
+#define _calibration_h
+
+#include "../main.h"
+
 #define MEASUREMENTS_N 100
 
 #define LN_DEFAULT_WHITE 90
@@ -25,3 +30,6 @@ void wait_for_enter(char * message);
 void calibrate_linesensors(struct calibration * calibration);
 void calibrate_irsensors(struct calibration * calibration);
 void calibrate_odometry(struct calibration * calibration);
+
+
+#endif
