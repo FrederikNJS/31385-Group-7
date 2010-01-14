@@ -106,7 +106,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		if(temp == LINESENSOR_N) {
 			temp--;
 		}
-		for(i; i < temp; i++) {
+		for(; i < temp; i++) {
 			dividend +=  (i + 1) * (100 - sensor[i]);
 			divisor += sensor[i];
 		}
@@ -143,7 +143,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		if(temp == LINESENSOR_N) {
 			temp--;
 		}
-		for(i; i < temp; i++) {
+		for(; i < temp; i++) {
 			dividend += (100 - sensor[i]) * (i + 1);
 			divisor += sensor[i];
 		}
@@ -159,7 +159,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		if(temp == LINESENSOR_N) {
 			temp--;
 		}
-		for(i; i < temp; i++) {
+		for(; i < temp; i++) {
 			dividend += (100 - sensor[i]) * (i+1);
 			divisor += sensor[i];
 		}
