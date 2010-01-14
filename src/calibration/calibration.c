@@ -49,16 +49,16 @@ void load_calibration(struct calibration * calibration) {
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
-		calibration->ir_ka[0] = atoi(strtok(data, " "));
-		calibration->ir_kb[0] = atoi(strtok(NULL, " "));
-		calibration->ir_ka[1] = atoi(strtok(NULL, " "));
-		calibration->ir_kb[1] = atoi(strtok(NULL, " "));
-		calibration->ir_ka[2] = atoi(strtok(NULL, " "));
-		calibration->ir_kb[2] = atoi(strtok(NULL, " "));
-		calibration->ir_ka[3] = atoi(strtok(NULL, " "));
-		calibration->ir_kb[3] = atoi(strtok(NULL, " "));
-		calibration->ir_ka[4] = atoi(strtok(NULL, " "));
-		calibration->ir_kb[4] = atoi(strtok(NULL, " "));
+		calibration->ir_ka[0] = atof(strtok(data, " "));
+		calibration->ir_kb[0] = atof(strtok(NULL, " "));
+		calibration->ir_ka[1] = atof(strtok(NULL, " "));
+		calibration->ir_kb[1] = atof(strtok(NULL, " "));
+		calibration->ir_ka[2] = atof(strtok(NULL, " "));
+		calibration->ir_kb[2] = atof(strtok(NULL, " "));
+		calibration->ir_ka[3] = atof(strtok(NULL, " "));
+		calibration->ir_kb[3] = atof(strtok(NULL, " "));
+		calibration->ir_ka[4] = atof(strtok(NULL, " "));
+		calibration->ir_kb[4] = atof(strtok(NULL, " "));
 	} else {
 		printf("ERROR: Could not read infrared sensor file (errno: %d)\n", errno);
 		printf("Using standard values\n");
@@ -70,7 +70,7 @@ void load_calibration(struct calibration * calibration) {
 	file = fopen("../../Calibration/odometry.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
-		/* FIXME: Need error detection*/
+		/* FIXME: Need error detection */
 		calibration->wheel_base = atof(strtok(data, " "));
 		calibration->wheel_ratio = atof(strtok(NULL, " "));
 	} else {
@@ -103,8 +103,8 @@ void save_calibration(struct calibration * calibration) {
 		file = fopen("../../Calibration/infraredsensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < IRSENSOR_N; i++) {
-				length += sprintf(&data[length], "%d ", calibration->ir_ka[i]);
-				length += sprintf(&data[length], "%d\n", calibration->ir_kb[i]);
+				length += sprintf(&data[length], "%f ", calibration->ir_ka[i]);
+				length += sprintf(&data[length], "%f\n", calibration->ir_kb[i]);
 			}
 			/* FIXME: Error detection */
 			fwrite(data, sizeof(char), length, file);
