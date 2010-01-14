@@ -53,6 +53,7 @@ all: ${PROG}
 ${PROG}: ${SRCS} ${HDRS2}
 	${CC} -c ${CFLAGS} ${LDFLAGS} ${SRCS} ${HDRS2}
 	${LD} *.o -o smr ${LDFLAGS}  ${LIBS}
+	rm -rf *.gch
 
 #${OBJS} : 
 #	echo ${OBJS}
