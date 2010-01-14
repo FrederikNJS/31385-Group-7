@@ -1,5 +1,6 @@
 #include "../calibration/calibration.h"
 #include "linesensor.h"
+#include "main.h"
 
 int read_linesensor_raw(int no) {
 	extern output out;
