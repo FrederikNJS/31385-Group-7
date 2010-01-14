@@ -12,7 +12,10 @@ task(int task_id, task_parameters * parameters)
 	double current_distance = 0.0;
     while(task_id != T_FINISHED)
 	{
+		//Synchronize and update odometry.
 	    rhdSync();
+		update_odometry(get_general_odometry());
+
 	    //Sensor Checking, and reactions
 	    if(parameters->triggers & TIME)
 		{

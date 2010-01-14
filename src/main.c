@@ -7,6 +7,7 @@
 #include "main.h"
 #include "mission/mission.h"
 #include "mission/task.h"
+#include "odometry/odometry.h"
 
 input in;
 output out;
@@ -25,7 +26,15 @@ main(int argc, char **argv)
 	{
 	    return result;
 	}
+	//Initialise and reset the general odometry structure,
+	//which will keep the movement throughout all missions.
+	//
+	reset_odometry(get_general_odometry());
+
+	//Perform the standard mission given the speed from the command line
+	//and the current odometry.
     mission(atoi(argv[1]));
+
     term(&out);
     return 0;
 }
