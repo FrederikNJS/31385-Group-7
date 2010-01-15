@@ -15,9 +15,9 @@ output out;
 int
 main(int argc, char **argv)
 {
-    if(argc < 2)
+    if(argc < 3)
 	{
-	    printf("Usage: smr <speed>\n");
+	    printf("Usage: smr <start_state> <speed>\n");
 	    return ERROR;
 	}
 
@@ -28,8 +28,7 @@ main(int argc, char **argv)
 	}
 
 	//Perform the standard mission given the speed from the command line
-	//and the current odometry.
-    mission(atoi(argv[1]));
+    mission(atoi(argv[1]), atoi(argv[2]));
 
     term(&out);
     return 0;

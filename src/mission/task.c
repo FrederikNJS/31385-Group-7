@@ -1,3 +1,4 @@
+indent: Standard input:43: Error:Unmatched 'else'
 #include <time.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -38,17 +39,18 @@ task(int task_id, task_parameters * parameters)
 	    if(parameters->triggers & ODOMETRY)
 		{
 		    if(task_id & T_TURN)
-			printf("In check for length: %f \n",
-			       current_distance - parameters->distance);
 
-		    else if(task_id & T_OCTURN)
+
+			else
+		    if(task_id & T_OCTURN)
 			{
 
 			}
 		    else
 			{
-			    if(current_distance - parameters->distance >=
-			       0 /*odometry distance */ )
+			    printf("In check for length: %f \n",
+				   current_distance - parameters->distance);
+			    if(current_distance - parameters->distance >= 0)
 				{
 
 				}

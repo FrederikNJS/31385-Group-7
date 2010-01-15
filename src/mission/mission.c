@@ -5,7 +5,7 @@
 #include "../main.h"
 
 void
-mission(int speed)
+mission(int start_state, int speed)
 {
 
     printf("Mission entered.\n");

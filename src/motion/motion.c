@@ -109,8 +109,8 @@ double
 speed_calc(double max_speed, double current_distance,
 	   double expected_distance)
 {
-    double speed = 200 * current_distance + 1;
-    double speed2 = 200 * (expected_distance - current_distance);
+    double speed = 2 * current_distance + 1;
+    double speed2 = 2 * (expected_distance - current_distance);
 
     if(speed <= 0 || speed2 <= 0 || speed2 != speed2)
 	{
