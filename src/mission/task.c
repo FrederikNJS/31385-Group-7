@@ -1,4 +1,3 @@
-indent: Standard input:43: Error:Unmatched 'else'
 #include <time.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
@@ -38,7 +37,7 @@ task(int task_id, task_parameters * parameters)
 		}
 	    if(parameters->triggers & ODOMETRY)
 		{
-		    if(task_id & T_TURN)
+		    if(task_id & T_TURN) {}
 
 
 			else
