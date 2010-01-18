@@ -1,5 +1,6 @@
 #include <time.h>
 #include <stdio.h>
+#include <math.h>
 #include <sys/ioctl.h>
 
 #include "../motion/motion.h"
@@ -110,37 +111,35 @@ task(int task_id, task_parameters * parameters)
 		}
 	}
 
-    //Remember to inform the hardware about the recent changes.
+	//If the task didn't use the goal data, they need to be updated.
+	if (!task_data.uses_goal) {
+		parameters->goal_x = current_odometry.x;
+		parameters->goal_y = current_odometry.y;
+		parameters->goal_angle = current_odometry.angle;
+	}
 
+    //Remember to inform the hardware about the recent changes.
 
     return 0;
 }
 
 void init_task_data(int task_id, task_parameters * parameters, task_data_t * task_data) {
-/*
-	//task_data-
-	typedef struct {
-	double current_distance, goal_distance;
-	//Tick is incremented once each rhdSync,
-	//and is set to zero at the start of a task.
-	int current_tick;
-	//The start time as given by "time" from <time.h>
-	double start_time;
-	//The current time as given by "time" from <time.h>
-	double current_time;
-	//The position/angle at the start.
-	double start_x, start_y, start_angle;
-} task_data_t;*/
-
+	
 	task_data->current_distance = 0.;
 	task_data->current_tick = 0;
 	task_data->start_time = task_data->current_time = time(NULL);
+	
+	int uses_goal = 0;
 
 	//TODO: Implement.
+	//If goal is used, enable uses_goal and set the goal pos/angle.	
 	switch (task_id) {
 		case T_FORWARD:
-			//
-		    printf("Forward.\n");
+			task_data->goal_distance = parameters->distance;
+			uses_goal = 1;
+			parameters->goal_angle = parameters->goal_angle;
+			parameters->goal_x = parameters->goal_x + task_data->goal_distance * cos(parameters->goal_angle);
+			parameters->goal_y = parameters->goal_y + task_data->goal_distance * sin(parameters->goal_angle);
 		    break;
 		case T_TURN:
 		    break;
@@ -163,4 +162,9 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 		case T_FINISHED:
 		    break;
 	}
+
+	task_data->uses_goal = uses_goal;
+	task_data->start_x = current_odometry.x;
+	task_data->start_y = current_odometry.y;
+	task_data->start_angle = current_odometry.angle;
 }

@@ -21,16 +21,6 @@ enum
 //this file; however, the goal_* variables
 //are edited by the task correspondingly to how the
 //task should edit them.
-//
-//When tasks can exactly calculate their end position/angle,
-//the start position/angle should be set to the current goal position/angle,
-//and the goal position/angle should be set to the destination.
-//
-//When tasks can't exactly calculate their end position,
-//the goal position/angle should be ignored,
-//the start position/angle shoul be set to the odometry position/angle,
-//and the goal position/angle should be set to the odometry position/angle
-//after the task has finished.
 
 typedef struct
 {
@@ -58,6 +48,8 @@ typedef struct {
 	double current_time;
 	//The position/angle at the start.
 	double start_x, start_y, start_angle;
+	//Whether or not the goal variables are used in the task.
+	int uses_goal;
 } task_data_t;
 
 int task(int task_id, task_parameters * parameters);
