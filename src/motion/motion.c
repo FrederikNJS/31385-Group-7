@@ -176,7 +176,7 @@ void follow_line(int direction, double max_speed, int line_color, struct calibra
 			if(direction == GO_RIGHT) {
 				in.speed_right->data[0] = 0;
 			} else if(direction == GO_LEFT) {
-				in.speed_LEFT->data[0] = 0;
+				in.speed_left->data[0] = 0;
 			}
 			break;
 		case LINE_NONE:
