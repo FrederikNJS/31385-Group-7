@@ -127,8 +127,8 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 	
 	int uses_goal = 0;
 
+	//If goal is used, enable uses_goal and set the goal pos/angle.
 	//TODO: Implement.
-	//If goal is used, enable uses_goal and set the goal pos/angle.	
 	switch (task_id) {
 		case T_FORWARD:
 			task_data->goal_distance = parameters->distance;

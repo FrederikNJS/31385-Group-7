@@ -23,7 +23,7 @@ mission(int start_state, int speed)
 		case M_START:
 		    printf("Entered start mission.\n");
 		    para.speed = speed;
-		    para.distance = 1.0;
+		    para.distance = 10.0;
 		    para.triggers = ODOMETRY;
 		    task(T_FORWARD, &para);
 		    finished = 1;

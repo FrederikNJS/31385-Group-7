@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "motion.h"
 #include "../main.h"
 
@@ -109,8 +110,8 @@ double
 speed_calc(double max_speed, double current_distance,
 	   double expected_distance)
 {
-    double speed = 2 * current_distance + 1;
-    double speed2 = 2 * (expected_distance - current_distance);
+    double speed = 80*sqrt(current_distance) + 1;
+    double speed2 = 80*sqrt((expected_distance - current_distance));
 
     if(speed <= 0 || speed2 <= 0 || speed2 != speed2)
 	{

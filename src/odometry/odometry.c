@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include "odometry.h"
+#include "../main.h"
 
 struct odometry_state current_odometry;
 
@@ -11,7 +12,7 @@ void update_odometry(struct odometry_state * p) {
 	 * in course 31385 at DTU, 2010, january.
      */
 
-    int delta;
+    short delta;
 
     /*Aging. */
     p->old_x = p->x;
@@ -21,12 +22,13 @@ void update_odometry(struct odometry_state * p) {
     /* U_right
 	 * Handle the encoder value from the right wheel.
 	 */
+	p->right_encoder = out.encoder_right->data[0];
     delta = p->right_encoder - p->right_encoder_old;
 	//Overflow.
-    if(delta > 0x8000)
-	delta -= 0x10000;
+    /*if(delta > 0x8000)
+	delta -= 0x8000;
     else if(delta < -0x8000)
-	delta += 0x10000;
+	delta += 0x8000;*/
     p->right_encoder_old = p->right_encoder;
     double dU_right = delta * p->cr;
     p->right_encoder_pos += dU_right;
@@ -34,12 +36,13 @@ void update_odometry(struct odometry_state * p) {
     /* U_left
 	 * Handle the encoder value from the left wheel.
 	 */
+	p->left_encoder = out.encoder_left->data[0];
     delta = p->left_encoder - p->left_encoder_old;
 	//Overflow.
-    if(delta > 0x8000)
+    /*if(delta > 0x8000)
 	delta -= 0x10000;
     else if(delta < -0x8000)
-	delta += 0x10000;
+	delta += 0x10000;*/
     p->left_encoder_old = p->left_encoder;
     double dU_left = delta * p->cl;
     p->left_encoder_pos += dU_left;
@@ -71,11 +74,13 @@ void reset_odometry(struct odometry_state * p)
     p->right_encoder_pos = p->left_encoder_pos = 0.0;
     p->x = p->y = p->angle = 0.0;
     p->old_x = p->old_y = p->old_angle = 0.0;
-    p->right_encoder_old = p->right_encoder;
-    p->left_encoder_old = p->left_encoder;
+    p->right_encoder_old = p->right_encoder = out.encoder_right->data[0];
+    p->left_encoder_old = p->left_encoder = out.encoder_left->data[0];
     p->dU = 0;
 
     p->w = WHEEL_DIAMETER;
     p->cr = DELTA_M;
     p->cl = p->cr;
+
+	printf("reset, state_odo: x:%f, y:%f, dU:%f\n", p->x, p->y, p->dU);
 }

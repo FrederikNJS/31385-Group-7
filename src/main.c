@@ -67,12 +67,12 @@ init()
     in.reset_motor_left = getoutputref("resetmotorr", output_table);
     in.reset_motor_right = getoutputref("resetmotorl", output_table);
 	
+    rhdSync();
+
 	//Initialise and reset the general odometry structure,
 	//which will keep the movement throughout all missions.
 	//
 	reset_odometry(&current_odometry);
-
-    rhdSync();
 
     return 0;
 }
