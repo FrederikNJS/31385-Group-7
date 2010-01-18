@@ -12,7 +12,10 @@ enum task_states
 };
 
 enum
-{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, INFRARED = 1 << 3 };
+{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, IR_L = 1 << 3, IR_FL =
+	1 << 4, IR_FC = 1 << 5, IR_FR = 1 << 6, IR_R = 1 << 7, IR_F =
+	1 << 8, IR_F_AVG, 1 << 9
+};
 
 typedef struct
 {
@@ -24,6 +27,9 @@ typedef struct
     int line;			//special case for the line sensor
 } task_parameters;
 
-int task(int task_id, task_parameters * parameters);
+/* Call with, Task ID, Speed, Triggers, Odometry Trigger, Time Trigger,
+ * Line Sensor Trigger, IR Triggers (sensors are ordered from left to right)
+ */
+int task(int task_id, int speed, int triggers, ...);
 
 #endif
