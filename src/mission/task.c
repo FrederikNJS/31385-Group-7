@@ -10,16 +10,22 @@
 int
 task(int task_id, task_parameters * parameters)
 {
-    long task_start = time(NULL);
+	task_data_t task_data;
+	
+	//Initialize the data for the current task,
+	//updating goal x, y and angle in parameters.
+	init_task_data(task_id, parameters, &task_data);
+
     double current_distance = 0.0;
     while(task_id != T_FINISHED)
 	{
 	    //Synchronize and update odometry.
 	    rhdSync();
-	    update_odometry(get_general_odometry());
 	    current_odometry.left_encoder = out.encoder_left->data[0];
 	    current_odometry.right_encoder = out.encoder_right->data[0];
 	    update_odometry(&current_odometry);
+		//TODO: Implement this.
+		//update_task_data(&task_data);
 
 	    current_distance = current_odometry.x;
 	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
@@ -30,7 +36,7 @@ task(int task_id, task_parameters * parameters)
 	    //Sensor Checking, and reactions
 	    if(parameters->triggers & TIME)
 		{
-		    if(time(NULL) >= task_start + parameters->time)
+		    if(task_data.current_time >= task_data.start_time + parameters->time)
 			{
 			    task_id = T_FINISHED;
 			}
@@ -108,4 +114,53 @@ task(int task_id, task_parameters * parameters)
 
 
     return 0;
+}
+
+void init_task_data(int task_id, task_parameters * parameters, task_data_t * task_data) {
+/*
+	//task_data-
+	typedef struct {
+	double current_distance, goal_distance;
+	//Tick is incremented once each rhdSync,
+	//and is set to zero at the start of a task.
+	int current_tick;
+	//The start time as given by "time" from <time.h>
+	double start_time;
+	//The current time as given by "time" from <time.h>
+	double current_time;
+	//The position/angle at the start.
+	double start_x, start_y, start_angle;
+} task_data_t;*/
+
+	task_data->current_distance = 0.;
+	task_data->current_tick = 0;
+	task_data->start_time = task_data->current_time = time(NULL);
+
+	//TODO: Implement.
+	switch (task_id) {
+		case T_FORWARD:
+			//
+		    printf("Forward.\n");
+		    break;
+		case T_TURN:
+		    break;
+		case T_OCTURN:
+		    break;
+		case T_REVERSE:
+		    break;
+		case T_WAIT:
+		    break;
+		case T_FOLLOW:
+		    break;
+		case T_FOLLOW_RIGHT:
+		    break;
+		case T_FOLLOW_STRAIGHT:
+		    break;
+		case T_FOLLOW_LEFT:
+		    break;
+		case T_STOP:
+		    break;
+		case T_FINISHED:
+		    break;
+	}
 }
