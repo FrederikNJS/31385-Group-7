@@ -17,7 +17,6 @@ task(int task_id, task_parameters * parameters)
 	//updating goal x, y and angle in parameters.
 	init_task_data(task_id, parameters, &task_data);
 
-    double current_distance = 0.0;
     while(task_id != T_FINISHED)
 	{
 	    //Synchronize and update odometry.
@@ -25,13 +24,11 @@ task(int task_id, task_parameters * parameters)
 	    current_odometry.left_encoder = out.encoder_left->data[0];
 	    current_odometry.right_encoder = out.encoder_right->data[0];
 	    update_odometry(&current_odometry);
-		//TODO: Implement this.
-		//update_task_data(&task_data);
+		update_task_data(&task_data);
 
-	    current_distance = current_odometry.x;
 	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
 		   out.encoder_left->data[0]);
-	    printf("x, y is:  %f,  %f\n", current_distance,
+	    printf("x, y is:  %f,  %f\n", task_data.current_distance,
 		   current_odometry.y);
 
 	    //Sensor Checking, and reactions
@@ -55,8 +52,8 @@ task(int task_id, task_parameters * parameters)
 		    else
 			{
 			    printf("In check for length: %f \n",
-				   current_distance - parameters->distance);
-			    if(current_distance - parameters->distance >= 0)
+				   task_data.current_distance - parameters->distance);
+			    if(task_data.current_distance - parameters->distance >= 0)
 				{
 
 				}
@@ -77,8 +74,7 @@ task(int task_id, task_parameters * parameters)
 		{
 		case T_FORWARD:
 		    printf("Forward.\n");
-		    forward(parameters->speed, current_distance,
-			    parameters->distance);
+		    forward(parameters->speed, parameters->distance, &task_data);
 		    break;
 		case T_TURN:
 		    break;
@@ -167,4 +163,12 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 	task_data->start_x = current_odometry.x;
 	task_data->start_y = current_odometry.y;
 	task_data->start_angle = current_odometry.angle;
+}
+
+void update_task_data(task_data_t * task_data) {
+
+	task_data->current_tick++;
+	task_data->current_time = time(NULL);
+	task_data->current_distance += current_odometry.dU;
+
 }

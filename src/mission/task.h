@@ -54,5 +54,6 @@ typedef struct {
 
 int task(int task_id, task_parameters * parameters);
 void init_task_data(int task_id, task_parameters * parameters, task_data_t * task_data);
+void update_task_data(task_data_t * task_data);
 
 #endif

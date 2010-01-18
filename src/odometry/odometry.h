@@ -34,6 +34,8 @@ struct odometry_state
 
     double old_x, old_y, x, y;
     double old_angle, angle;
+
+	double dU;
 };
 
 /*This function should always be called during missions at each rhdSync,

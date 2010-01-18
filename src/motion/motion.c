@@ -3,14 +3,14 @@
 #include "../main.h"
 
 void
-forward(int speed, double current_distance, double expected_distance)
+forward(int speed, double expected_distance, task_data_t * td)
 {
     extern input in;
-    int mod_speed = speed_calc(speed, current_distance, expected_distance);
+    int mod_speed = speed_calc(speed, td->current_distance, expected_distance);
 
     printf
 	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
-	 mod_speed, speed, current_distance, expected_distance);
+	 mod_speed, speed, td->current_distance, expected_distance);
     if(in.speed_left->data[0] != mod_speed)
 	{
 	    in.speed_left->data[0] = mod_speed;

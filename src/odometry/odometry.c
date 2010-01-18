@@ -46,6 +46,7 @@ void update_odometry(struct odometry_state * p) {
 
     /*dU = (dU_right + dU_left) / 2; */
     double dU = (dU_right + dU_left) / 2;
+	p->dU = dU;
 
     /*delta O(i) = (delta U(right) - delta U(left))/wheel_distance */
     double dO = (dU_right - dU_left) / WHEEL_SEPARATION;
@@ -72,12 +73,9 @@ void reset_odometry(struct odometry_state * p)
     p->old_x = p->old_y = p->old_angle = 0.0;
     p->right_encoder_old = p->right_encoder;
     p->left_encoder_old = p->left_encoder;
+    p->dU = 0;
 
     p->w = WHEEL_DIAMETER;
     p->cr = DELTA_M;
     p->cl = p->cr;
-}
-
-struct odometry_state * get_general_odometry(void) {
-	return &current_odometry;
 }
