@@ -79,19 +79,19 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 	//If (almost) all the sensors are within the first low sensor data range
 	//it have detected a cross road
 	if(start1 <= 0 && end1 >= LINESENSOR_N) {
-		situation = -3;
+		situation = LINE_CROSS;
 	} else if(start1 == 0 && end1 >= (LINESENSOR_N / 2)) {
 		//If all the sensors from left to the middle is within the first streak
 		//it have detected a left turn
-		situation = -1;
+		situation = LINE_LEFT;
 	} else if(start1 < (LINESENSOR_N / 2) && end1 == (LINESENSOR_N - 1)) {
 		//If all the sensors from the middle to the right is within the first streak
 		//it have detected a right turn
-		situation = -2;
+		situation = LINE_RIGHT;
 	} else if(start2 == -1) {
 		//If none of the above situations have occurred, and the second streak is not started
 		//It have simply detected a single line
-		situation = 1;
+		situation = LINE_SINGLE;
 		//For calculating the location of the line it will use weighed mean, but
 		//only from right before to right next the lowest sensor (with the correct weight according to their position)
 		i = lowest1 - 1;
@@ -117,7 +117,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		lineLocations[0] = dividend / divisor;
 	} else if(end2 != -1) { //two roads
 		//If both streaks of low sensors is set, two lines have been detected
-		situation = 2;
+		situation = LINE_DOUBLE;
 		//Finds the lowest sensor in the first streak
 		for(i = start1; i <= end1; i++) {
 			temp = sensor[i];
@@ -168,7 +168,7 @@ int find_line_position(int line_color, struct calibration * calibration, double 
 		}
 		lineLocations[1] = dividend/divisor;
 	} else {
-		situation = 0;
+		situation = LINE_NONE;
 	}
 	return situation;
 }
