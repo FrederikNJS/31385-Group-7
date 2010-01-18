@@ -3,6 +3,7 @@
 #include "motion.h"
 #include "../main.h"
 #include "../linesensor/linesensor.h"
+#include "../calibration/calibration.h"
 
 void
 forward(int speed, double expected_distance, task_data_t * td)

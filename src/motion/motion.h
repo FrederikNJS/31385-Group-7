@@ -2,6 +2,7 @@
 #define _motion_h
 
 #include "../mission/task.h"
+#include "../calibration/calibration.h"
 
 #define GO_STRAIGHT 0
 #define GO_LEFT -1
