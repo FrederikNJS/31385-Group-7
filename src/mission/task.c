@@ -21,13 +21,12 @@ task(int task_id, int speed, int triggers, ...)
     long task_start = time(NULL);
     double current_distance = 0.0;
 
-    double time;		//in seconds
+    double time = 0;		//in seconds
     int line;			//special case for the line sensor*/
     double ir_distance[5];	//in meters
 	double * ir_distance_p = ir_distance;
 
-	//TODO: Shouldn't va_start be called first?
-	//And va_end be called at the end?
+	int terminator = -1;
 
 	va_list arguments;
 	va_start(arguments, triggers);
@@ -103,12 +102,11 @@ task(int task_id, int speed, int triggers, ...)
 	    //Sensor Checking, and reactions
 	    if(triggers & TIME)
 		{
-			//TODO: Parameters are used here, bad.
-		    /*if(task_data.current_time >= task_data.start_time + parameters->time)
+			if(task_data.current_time >= task_data.start_time + time)
 			{
 			    task_id = T_FINISHED;
 				terminator = TIME;
-			}*/
+			}
 		}
 	    if(triggers & ODOMETRY)
 		{
@@ -128,8 +126,8 @@ task(int task_id, int speed, int triggers, ...)
 				   current_distance - task_data.goal_distance);
 			    if(current_distance - task_data.goal_distance >= 0)
 				{
-					//TODO: Terminator not found, implement properly.
-					//terminator = TIME;
+					terminator = ODOMETRY;
+					task_id= T_FINISHED;
 				}
 			}
 
@@ -209,6 +207,7 @@ task(int task_id, int speed, int triggers, ...)
 			follow_line(GO_LEFT, speed, LINE_WHITE);
 		    break;
 		case T_STOP:
+			printf("STOP\n");
 		    break;
 		case T_FINISHED:
 		    in.speed_left->data[0] = 0;
@@ -223,11 +222,10 @@ task(int task_id, int speed, int triggers, ...)
 	    void *arg;
 		printf("Before keyboard.\n");
 	    ioctl(0, FIONREAD, &arg);
-	    if(arg != 0)
+	    if(arg != 0 && task_id != T_STOP)
 		{
 		    task_id = T_FINISHED;
-			//TODO: Terminator not found, implement properly.
-			//terminator = 0;
+			terminator = 0;
 			printf("Stopping.\n");
 		}
 		printf("After keyboard.\n");
@@ -245,8 +243,7 @@ task(int task_id, int speed, int triggers, ...)
 	//Cleanup!
 	va_end(arguments);
 
-	//TODO: Terminator not found, implement properly.					
-    return 0;//terminator;
+    return terminator;
 }
 
 void init_task_data(int task_id, task_parameters * parameters, task_data_t * task_data) {
