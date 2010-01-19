@@ -16,7 +16,7 @@ void load_calibration() {
 	FILE * file;
 	int i;
 	char data[512];
-	file = fopen("../../Calibration/linesensors.dat", "r");
+	file = fopen("Calibration/linesensors.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
@@ -47,7 +47,7 @@ void load_calibration() {
 			calibration.ls_white[i] = LN_DEFAULT_WHITE;
 		}
 	}
-	file = fopen("../../Calibration/infraredsensors.dat", "r");
+	file = fopen("Calibration/infraredsensors.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
@@ -69,7 +69,7 @@ void load_calibration() {
 			calibration.ir_kb[i] = IR_DEFAULT_KB;
 		}
 	}
-	file = fopen("../../Calibration/odometry.dat", "r");
+	file = fopen("Calibration/odometry.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection */
@@ -89,7 +89,7 @@ void save_calibration() {
 		int i = 0;
 		int length = 0;
 		FILE * file;
-		file = fopen("../../Calibration/linesensors.dat", "w+");
+		file = fopen("Calibration/linesensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < LINESENSOR_N; i++) {
 				length += sprintf(&data[length], "%d ", calibration.ls_black[i]);
@@ -102,7 +102,7 @@ void save_calibration() {
 		} else {
 			printf("ERROR: Linesensor values not saved (errno: %d)\n", errno);
 		}
-		file = fopen("../../Calibration/infraredsensors.dat", "w+");
+		file = fopen("Calibration/infraredsensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < IRSENSOR_N; i++) {
 				length += sprintf(&data[length], "%f ", calibration.ir_ka[i]);
@@ -115,7 +115,7 @@ void save_calibration() {
 		} else {
 			printf("ERROR: infrared sensor values not saved (errno: %d)\n", errno);
 		}
-		file = fopen("../../Calibration/odometry.dat", "w+");
+		file = fopen("Calibration/odometry.dat", "w+");
 		if(file) {
 			length += sprintf(&data[length], "%f ", calibration.wheel_base);
 			length += sprintf(&data[length], "%f\n", calibration.wheel_ratio);
