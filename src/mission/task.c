@@ -187,8 +187,10 @@ task(int task_id, int speed, int triggers, ...)
 			turn(speed, current_odometry.angle, task_data.goal_distance);
 		    break;
 		case T_OCTURN:
+			octurn(speed, current_odometry.angle, task_data.goal_distance);
 		    break;
 		case T_REVERSE:
+			reverse(speed, &task_data);
 		    break;
 		case T_WAIT:
 		    break;

@@ -30,6 +30,30 @@ forward(int speed, task_data_t * td)
 }
 
 void
+reverse(int speed, task_data_t * td)
+{
+    extern input in;
+    int mod_speed = speed_calc(speed, td->current_distance, td->goal_distance);
+
+    printf
+	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
+	 mod_speed, speed, td->current_distance, td->goal_distance);
+
+    double speed_diff = 100.0 * (td->start_angle - current_odometry.angle);
+
+    if(in.speed_left->data[0] != mod_speed - speed_diff)
+	{
+	    in.speed_left->data[0] = (mod_speed - speed_diff)*-1;
+	    in.speed_left->updated = 1;
+	}
+    if(in.speed_right->data[0] != mod_speed + speed_diff)
+	{
+	    in.speed_right->data[0] = (mod_speed + speed_diff)*-1;
+	    in.speed_right->updated = 1;
+	}
+}
+
+void
 turn(int speed, double current_angle, double expected_angle)
 {
     extern input in;
