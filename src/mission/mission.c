@@ -9,10 +9,9 @@
 void
 mission(int start_state, int speed)
 {
-
-    printf("Mission entered.\n");
-    char finished = 0;
-    int state = M_START;
+    printf("Mission entered at state %d with speed %d\n", start_state, speed);
+    char finished = 1;
+    int state = start_state;
     int i;
 	
 	//TODO: Currently, [2010-01-19, 9:57], these variables are unused.
@@ -21,29 +20,34 @@ mission(int start_state, int speed)
 
     do
 	{
+		finished = 1;
 	    //Mission State Machine
 	    switch (state)
 		{
 		case M_START:
 		    printf("Entered start mission.\n");
 		    if(!task(T_FORWARD, speed, ODOMETRY, 1.0)) break;
-		    finished = 1;
 		    break;
 		case M_SQUARE:
-		    for(i = 0; i < 4; i++)
-			{
-			    if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
-			    if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
-			}
+			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
+			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
+			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
+			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
+			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
+			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
+			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
+			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 		    break;
 		case M_DISTANCE_TO_BOX:
+			printf("In the box\n");
 		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.5)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, 10, IR_F, 0.3)) break;
 		    //printf(current y distance);
 		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE,	LINE_RIGHT)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_RIGHT)) break;
 		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
 		    state = M_MOVE_OBSTACLE;
+			finished = 0;
 		    break;
 		case M_MOVE_OBSTACLE:
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 2.5)) break;
@@ -56,6 +60,7 @@ mission(int start_state, int speed)
 		    if(!task(T_OCTURN, speed / 2, ODOMETRY, -M_PI / 2)) break;
 			if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 		    state = M_FIND_GHOST_GATE;
+			finished = 0;
 		    break;
 		case M_FIND_GHOST_GATE:
 		    if(!task(T_FOLLOW_RIGHT, speed, LINE, LINE_CROSS)) break;
@@ -66,6 +71,7 @@ mission(int start_state, int speed)
 				temp = task(T_FORWARD, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
 				if(!temp) break;
 				if(temp == IR_L) { //Second rod found, success!
+					finished = 0;
 					state = M_GO_THROUGH_GHOST_GATE;
 					break;
 				} else { //Second rod not found
@@ -74,6 +80,7 @@ mission(int start_state, int speed)
 					if(!temp) break;
 					if(temp == IR_L) {//Second rod found behind first
 						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
+						finished = 0;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					}
@@ -87,6 +94,7 @@ mission(int start_state, int speed)
 					if(!temp) break;
 					if(temp == IR_L) { //Second rod found while backing up
 						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
+						finished = 0;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					} else { //Second rod not found while backing up
@@ -94,12 +102,14 @@ mission(int start_state, int speed)
 						temp = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
 						if(!temp) break;
 						if(temp == IR_L) {//Second rod found ahead of first
+							finished = 0;
 							state = M_GO_THROUGH_GHOST_GATE;
 							break;
 						}
 					}
 				}
 			}
+			finished = 0;
 			state = M_WALL_HUGGING;
 			break;
 		case M_GO_THROUGH_GHOST_GATE:
@@ -141,6 +151,7 @@ mission(int start_state, int speed)
 				
 				break;
 			}
+			finished = 0;
 			state = M_WHITE_IS_THE_NEW_BLACK;
 		    break;
 		}
@@ -151,6 +162,7 @@ mission(int start_state, int speed)
 			if(!task(T_FOLLOW_WHITE_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.3)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI/2)) break;
+			finished = 0;
 			state = M_HARDCORE_PARKING_ACTION;
 		    break;
 		case M_HARDCORE_PARKING_ACTION: {

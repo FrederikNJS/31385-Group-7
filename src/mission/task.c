@@ -22,7 +22,6 @@ task(int task_id, int speed, int triggers, ...)
     double current_distance = 0.0;
 
     double time;		//in seconds
-    double distance = 0;		//in meters
     int line;			//special case for the line sensor*/
     double ir_distance[5];	//in meters
 	double * ir_distance_p = ir_distance;
@@ -40,7 +39,7 @@ task(int task_id, int speed, int triggers, ...)
 
     if(triggers & ODOMETRY)
 	{
-	    distance = va_arg(arguments, double);
+	    task_data.goal_distance = va_arg(arguments, double);
 	}
 
     if(triggers & LINE)
@@ -85,7 +84,7 @@ task(int task_id, int speed, int triggers, ...)
 		}
 	}
 
-    while(task_id != T_STOP)
+	while(task_id != T_STOP)
 	{
 	    //Synchronize and update odometry.
 	    rhdSync();
@@ -126,8 +125,8 @@ task(int task_id, int speed, int triggers, ...)
 		    else
 			{
 			    printf("In check for length: %f \n",
-				   current_distance - distance);
-			    if(current_distance - distance >= 0)
+				   current_distance - task_data.goal_distance);
+			    if(current_distance - task_data.goal_distance >= 0)
 				{
 					//TODO: Terminator not found, implement properly.
 					//terminator = TIME;
@@ -180,10 +179,10 @@ task(int task_id, int speed, int triggers, ...)
 		{
 		case T_FORWARD:
 		    printf("Forward.\n");
-		    forward(speed, current_distance, &task_data);
+		    forward(speed, &task_data);
 		    break;
 		case T_TURN:
-			turn(speed, current_odometry.angle, distance);
+			turn(speed, current_odometry.angle, task_data.goal_distance);
 		    break;
 		case T_OCTURN:
 		    break;
@@ -255,7 +254,7 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 	task_data->current_distance = 0.;
 	task_data->current_tick = 0;
 	task_data->start_time = task_data->current_time = time(NULL);
-	
+	task_data->goal_distance = 1000000;
 	int uses_goal = 0;
 
 	//If goal is used, enable uses_goal and set the goal pos/angle.

@@ -6,14 +6,14 @@
 #include "../calibration/calibration.h"
 
 void
-forward(int speed, double expected_distance, task_data_t * td)
+forward(int speed, task_data_t * td)
 {
     extern input in;
-    int mod_speed = speed_calc(speed, td->current_distance, expected_distance);
+    int mod_speed = speed_calc(speed, td->current_distance, td->goal_distance);
 
     printf
 	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
-	 mod_speed, speed, td->current_distance, expected_distance);
+	 mod_speed, speed, td->current_distance, td->goal_distance);
 
     double speed_diff = 100.0 * (td->start_angle - current_odometry.angle);
 
@@ -117,7 +117,7 @@ speed_calc(double max_speed, double current_distance,
 {
     double speed = 80*sqrt(current_distance) + 1;
     double speed2 = 80*sqrt((expected_distance - current_distance));
-
+	printf("speed: %f, speed2: %f, max_speed: %f, curr: %f exp: %f\n", speed, speed2, max_speed, current_distance, expected_distance);
     if(speed <= 0 || speed2 <= 0 || speed2 != speed2)
 	{
 	    printf("speed0:     0\n");
