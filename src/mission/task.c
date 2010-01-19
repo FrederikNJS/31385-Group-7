@@ -85,7 +85,7 @@ task(int task_id, int speed, int triggers, ...)
 		}
 	}
 
-    while(task_id != T_FINISHED)
+    while(task_id != T_STOP)
 	{
 	    //Synchronize and update odometry.
 	    rhdSync();
@@ -98,6 +98,8 @@ task(int task_id, int speed, int triggers, ...)
 		   out.encoder_left->data[0]);
 	    printf("x, y is:  %f,  %f\n", task_data.current_distance,
 		   current_odometry.y);
+
+		//printf("Value of random variables. Shouldn't be null...%p\n", parameters);
 
 	    //Sensor Checking, and reactions
 	    if(triggers & TIME)
@@ -199,18 +201,26 @@ task(int task_id, int speed, int triggers, ...)
 		case T_STOP:
 		    break;
 		case T_FINISHED:
+		    in.speed_left->data[0] = 0;
+		    in.speed_left->updated = 1;
+		    in.speed_right->data[0] = 0;
+		    in.speed_right->updated = 1;
+			task_id = T_STOP;
 		    break;
 		}
 
 	    //Stop if keyboard is activated
 	    void *arg;
+		printf("Before keyboard.\n");
 	    ioctl(0, FIONREAD, &arg);
 	    if(arg != 0)
 		{
 		    task_id = T_FINISHED;
 			//TODO: Terminator not found, implement properly.
 			//terminator = 0;
+			printf("Stopping.\n");
 		}
+		printf("After keyboard.\n");
 	}
 
 	//If the task didn't use the goal data, they need to be updated.
