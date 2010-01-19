@@ -191,22 +191,22 @@ task(int task_id, int speed, int triggers, ...)
 		case T_WAIT:
 		    break;
 		case T_FOLLOW_RIGHT:
-			/*follow_line(GO_RIGHT, speed, LINE_BLACK);*/
+			follow_line(GO_RIGHT, speed, LINE_BLACK);
 		    break;
 		case T_FOLLOW_STRAIGHT:
-			/*follow_line(GO_STRAIGHT, speed, LINE_BLACK);*/
+			follow_line(GO_STRAIGHT, speed, LINE_BLACK);
 		    break;
 		case T_FOLLOW_LEFT:
-			/*follow_line(GO_LEFT, speed, LINE_BLACK);*/
+			follow_line(GO_LEFT, speed, LINE_BLACK);
 		    break;
 		case T_FOLLOW_WHITE_RIGHT:
-			/*follow_line(GO_RIGHT, speed, LINE_WHITE);*/
+			follow_line(GO_RIGHT, speed, LINE_WHITE);
 		    break;
 		case T_FOLLOW_WHITE_STRAIGHT:
-			/*follow_line(GO_STRAIGHT, speed, LINE_WHITE);*/
+			follow_line(GO_STRAIGHT, speed, LINE_WHITE);
 		    break;
 		case T_FOLLOW_WHITE_LEFT:
-			/*follow_line(GO_LEFT, speed, LINE_WHITE);*/
+			follow_line(GO_LEFT, speed, LINE_WHITE);
 		    break;
 		case T_STOP:
 		    break;
