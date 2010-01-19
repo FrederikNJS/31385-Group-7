@@ -60,7 +60,7 @@ void update_odometry(struct odometry_state * p) {
 	p->dU = dU;
 
     /*delta O(i) = (delta U(right) - delta U(left))/wheel_distance */
-    double dO = (dU_right - dU_left) / calibration.wheel_base;
+    double dO = (dU_right - dU_left);
 
     /*theta(i) = theta(i-1) + delta O(i);
        x(i) = x(i-1) + dU(i)*cos(theta(i));
