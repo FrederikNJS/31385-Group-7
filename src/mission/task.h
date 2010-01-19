@@ -52,6 +52,8 @@ typedef struct
     double start_time;
     //The current time as given by "time" from <time.h>
     double current_time;
+    //The last time the infrared sensors were measured as given by "time" from <time.h>
+    double last_ir_sensor_measure_time;
     //The position/angle at the start.
     double start_x, start_y, start_angle;
     //Whether or not the goal variables are used in the task.

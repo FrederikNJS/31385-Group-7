@@ -93,6 +93,11 @@ task(int task_id, int speed, int triggers, ...)
 	    update_odometry(&current_odometry);
 		update_task_data(&task_data);
 
+		//Check for ir-sensor measurement.
+		if (task_data->current_time - task_data->last_ir_sensor_measure_time > 0.200) {
+			//TODO: Make an ir-sensor measurement here.
+		}
+
 	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
 		   out.encoder_left->data[0]);
 	    printf("x, y is:  %f,  %f\n", current_odometry.x,
@@ -260,7 +265,8 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 	
 	task_data->current_distance = 0.;
 	task_data->current_tick = 0;
-	task_data->start_time = task_data->current_time = time(NULL);
+	task_data->start_time = task_data->last_ir_sensor_measure_time = task_data->current_time = time(NULL);
+	task_data->last_ir_sensor_measure_time += 0.2;
 	task_data->goal_distance = 1000000;
 	int uses_goal = 0;
 
