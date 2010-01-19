@@ -183,6 +183,7 @@ task(int task_id, int speed, int triggers, ...)
 		    forward(speed, current_distance, &task_data);
 		    break;
 		case T_TURN:
+			turn(speed, current_odometry.angle, distance);
 		    break;
 		case T_OCTURN:
 		    break;
@@ -190,13 +191,23 @@ task(int task_id, int speed, int triggers, ...)
 		    break;
 		case T_WAIT:
 		    break;
-		case T_FOLLOW:
-		    break;
 		case T_FOLLOW_RIGHT:
+			/*follow_line(GO_RIGHT, speed, LINE_BLACK);*/
 		    break;
 		case T_FOLLOW_STRAIGHT:
+			/*follow_line(GO_STRAIGHT, speed, LINE_BLACK);*/
 		    break;
 		case T_FOLLOW_LEFT:
+			/*follow_line(GO_LEFT, speed, LINE_BLACK);*/
+		    break;
+		case T_FOLLOW_WHITE_RIGHT:
+			/*follow_line(GO_RIGHT, speed, LINE_WHITE);*/
+		    break;
+		case T_FOLLOW_WHITE_STRAIGHT:
+			/*follow_line(GO_STRAIGHT, speed, LINE_WHITE);*/
+		    break;
+		case T_FOLLOW_WHITE_LEFT:
+			/*follow_line(GO_LEFT, speed, LINE_WHITE);*/
 		    break;
 		case T_STOP:
 		    break;

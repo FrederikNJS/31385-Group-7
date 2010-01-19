@@ -14,7 +14,7 @@
 #define LINE_DOUBLE	2
 
 int read_linesensor_raw(int no);
-int read_linesensor_calibrated(int no, struct calibration * calibration);
-int find_line_position(int line_color, struct calibration * calibration, double lineLocations[2]);
+int read_linesensor_calibrated(int no);
+int find_line_position(int line_color, double lineLocations[2]);
 
 #endif

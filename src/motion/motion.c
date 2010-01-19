@@ -134,10 +134,10 @@ speed_calc(double max_speed, double current_distance,
     return (double) speed2;
 }
 
-void follow_line(int direction, double max_speed, int line_color, struct calibration * calibration) {
+void follow_line(int direction, double max_speed, int line_color) {
 	double line[2];
 	extern input in;
-	int retval = find_line_position(line_color, calibration, line);
+	int retval = find_line_position(line_color, line);
 	in.speed_left->data[0] = max_speed;
 	in.speed_right->data[0] = max_speed;
 	switch(retval) {

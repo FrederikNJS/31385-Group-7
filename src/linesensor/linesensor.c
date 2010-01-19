@@ -7,7 +7,8 @@ int read_linesensor_raw(int no) {
 	return out.line_sensor->data[no];
 }
 
-int read_linesensor_calibrated(int no, struct calibration * calibration) {
+int read_linesensor_calibrated(int no) {
+	extern calibration calibration;
 	int tmp = (100 * (read_linesensor_raw(no) - calibration->ls_black[no])) / (calibration->ls_white[no] - calibration->ls_black[no]);
 	if(tmp > 100) {
 		tmp = 100;
@@ -17,7 +18,8 @@ int read_linesensor_calibrated(int no, struct calibration * calibration) {
 	return tmp;
 }
 
-int find_line_position(int line_color, struct calibration * calibration, double lineLocations[2]) {
+int find_line_position(int line_color, double lineLocations[2]) {
+	extern calibration calibration;
 	int i = 0;
 	int sensor[LINESENSOR_N];
 	int start1 = 0;
