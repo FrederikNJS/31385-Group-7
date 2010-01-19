@@ -8,6 +8,7 @@
 #include "mission/mission.h"
 #include "mission/task.h"
 #include "odometry/odometry.h"
+#include "calibration/calibration.h"
 
 input in;
 output out;
