@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "odometry.h"
 #include "../main.h"
+#include "../calibration/calibration.h"
 
 struct odometry_state current_odometry;
 
@@ -52,7 +53,7 @@ void update_odometry(struct odometry_state * p) {
 	p->dU = dU;
 
     /*delta O(i) = (delta U(right) - delta U(left))/wheel_distance */
-    double dO = (dU_right - dU_left) / WHEEL_SEPARATION;
+    double dO = (dU_right - dU_left) / calibration.wheel_base;
 
     /*theta(i) = theta(i-1) + delta O(i);
        x(i) = x(i-1) + dU(i)*cos(theta(i));
@@ -78,7 +79,7 @@ void reset_odometry(struct odometry_state * p)
     p->left_encoder_old = p->left_encoder = out.encoder_left->data[0];
     p->dU = 0;
 
-    p->w = WHEEL_DIAMETER;
+    p->w = calibration.wheel_ratio;
     p->cr = DELTA_M;
     p->cl = p->cr;
 

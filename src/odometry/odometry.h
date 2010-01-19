@@ -8,10 +8,10 @@
 #ifndef _odometry_h
 #define _odometry_h
 
+#include "../calibration/calibration.h"
+
 //odometry
-#define WHEEL_DIAMETER   0.067	/* m */
-#define WHEEL_SEPARATION 0.252	/* m */
-#define DELTA_M (M_PI * WHEEL_DIAMETER / 2000.0)
+#define DELTA_M (M_PI * calibration.wheel_base / 2000.0)
 
 extern struct odometry_state current_odometry;
 
