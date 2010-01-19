@@ -2,6 +2,8 @@
 #include <math.h>
 #include "motion.h"
 #include "../main.h"
+#include "../linesensor/linesensor.h"
+#include "../calibration/calibration.h"
 
 void
 forward(int speed, double expected_distance, task_data_t * td)
@@ -130,4 +132,58 @@ speed_calc(double max_speed, double current_distance,
 	}
     printf("speed2:    %f\n", speed2);
     return (double) speed2;
+}
+
+void follow_line(int direction, double max_speed, int line_color, struct calibration * calibration) {
+	double line[2];
+	extern input in;
+	int retval = find_line_position(line_color, calibration, line);
+	in.speed_left->data[0] = max_speed;
+	in.speed_right->data[0] = max_speed;
+	switch(retval) {
+		case LINE_SINGLE:
+			//Same action for all, just follow the line
+			if(line[0] > 3.5) {
+				in.speed_left->data[0] *= (2-line[0]/3.5);
+			} else {
+				in.speed_right->data[0] *= line[0]/3.5;
+			}
+			break;
+		case LINE_DOUBLE:
+			//Straight have nothing to do here
+			if(direction == GO_STRAIGHT) {
+				if(line[direction == 1 ? 0 : 1] > 3.5) {
+					in.speed_left->data[0] *= (2-line[direction == 1 ? 0 : 1]/3.5);
+				} else {
+					in.speed_right->data[0] *= line[direction == 1 ? 0 : 1]/3.5;
+				}
+			}
+			break;
+		case LINE_LEFT:
+			//Only left have something to do here
+			if(direction == GO_LEFT) {
+				in.speed_left->data[0] = 0;
+			}
+			break;
+		case LINE_RIGHT:
+			//Only right have something to do here
+			if(direction == GO_RIGHT) {
+				in.speed_right->data[0] = 0;
+			}
+			break;
+		case LINE_CROSS:
+			//Straight have nothing to do here
+			if(direction == GO_RIGHT) {
+				in.speed_right->data[0] = 0;
+			} else if(direction == GO_LEFT) {
+				in.speed_left->data[0] = 0;
+			}
+			break;
+		case LINE_NONE:
+			in.speed_right->data[0] = 0;
+			in.speed_left->data[0] = 0;
+			break;
+	}
+	in.speed_left->updated = 1;
+	in.speed_right->updated = 1;
 }
