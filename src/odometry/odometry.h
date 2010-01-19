@@ -8,6 +8,8 @@
 #ifndef _odometry_h
 #define _odometry_h
 
+#include "../calibration/calibration.h"
+
 //odometry
 #define DELTA_M (M_PI * calibration.wheel_base / 2000.0)
 
