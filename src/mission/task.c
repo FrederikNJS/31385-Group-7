@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include "../motion/motion.h"
 #include "../odometry/odometry.h"
+#include "../linesensor/linesensor.h"
 #include "task.h"
 
 typedef double* double_pointer_yeah;
@@ -85,6 +86,9 @@ task(int task_id, int speed, int triggers, ...)
 
 	while(task_id != T_STOP)
 	{
+		
+		printf("Current task id: %d\n", task_id);
+
 	    //Synchronize and update odometry.
 	    rhdSync();
 	    current_odometry.left_encoder = out.encoder_left->data[0];
@@ -189,22 +193,22 @@ task(int task_id, int speed, int triggers, ...)
 		case T_WAIT:
 		    break;
 		case T_FOLLOW_RIGHT:
-			follow_line(GO_RIGHT, speed, LINE_BLACK);
+			follow_line(GO_RIGHT, speed, BLACK_LINE);
 		    break;
 		case T_FOLLOW_STRAIGHT:
-			follow_line(GO_STRAIGHT, speed, LINE_BLACK);
+			follow_line(GO_STRAIGHT, speed, BLACK_LINE);
 		    break;
 		case T_FOLLOW_LEFT:
-			follow_line(GO_LEFT, speed, LINE_BLACK);
+			follow_line(GO_LEFT, speed, BLACK_LINE);
 		    break;
 		case T_FOLLOW_WHITE_RIGHT:
-			follow_line(GO_RIGHT, speed, LINE_WHITE);
+			follow_line(GO_RIGHT, speed, WHITE_LINE);
 		    break;
 		case T_FOLLOW_WHITE_STRAIGHT:
-			follow_line(GO_STRAIGHT, speed, LINE_WHITE);
+			follow_line(GO_STRAIGHT, speed, WHITE_LINE);
 		    break;
 		case T_FOLLOW_WHITE_LEFT:
-			follow_line(GO_LEFT, speed, LINE_WHITE);
+			follow_line(GO_LEFT, speed, WHITE_LINE);
 		    break;
 		case T_STOP:
 			printf("STOP\n");
@@ -220,15 +224,15 @@ task(int task_id, int speed, int triggers, ...)
 
 	    //Stop if keyboard is activated
 	    void *arg;
-		printf("Before keyboard.\n");
+		//printf("Before keyboard.\n");
 	    ioctl(0, FIONREAD, &arg);
 	    if(arg != 0 && task_id != T_STOP)
 		{
 		    task_id = T_FINISHED;
 			terminator = 0;
-			printf("Stopping.\n");
+			//printf("Stopping.\n");
 		}
-		printf("After keyboard.\n");
+		//printf("After keyboard.\n");
 	}
 
 	//If the task didn't use the goal data, they need to be updated.

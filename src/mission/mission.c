@@ -29,8 +29,11 @@ mission(int start_state, int speed)
 		    if(!task(T_FORWARD, speed, ODOMETRY, 1.0)) break;
 		    break;
 		case M_SQUARE:
+			printf("In the square1!\n");
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
+			printf("In the square2!\n");
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
+			printf("In the square3!\n");
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
