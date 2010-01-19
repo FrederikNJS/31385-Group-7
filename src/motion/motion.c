@@ -14,14 +14,17 @@ forward(int speed, double expected_distance, task_data_t * td)
     printf
 	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
 	 mod_speed, speed, td->current_distance, expected_distance);
-    if(in.speed_left->data[0] != mod_speed)
+
+    double speed_diff = 100.0 * (td->start_angle - current_odometry.angle);
+
+    if(in.speed_left->data[0] != mod_speed - speed_diff)
 	{
-	    in.speed_left->data[0] = mod_speed;
+	    in.speed_left->data[0] = mod_speed - speed_diff;
 	    in.speed_left->updated = 1;
 	}
-    if(in.speed_right->data[0] != mod_speed)
+    if(in.speed_right->data[0] != mod_speed + speed_diff)
 	{
-	    in.speed_right->data[0] = mod_speed;
+	    in.speed_right->data[0] = mod_speed + speed_diff;
 	    in.speed_right->updated = 1;
 	}
 }

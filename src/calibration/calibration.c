@@ -10,7 +10,7 @@
 #include "calibration.h"
 #include "../main.h"
 
-calibration calibration;
+calibration_t calibration;
 
 void load_calibration() {
 	FILE * file;

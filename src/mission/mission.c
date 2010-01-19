@@ -38,10 +38,10 @@ mission(int start_state, int speed)
 		    break;
 		case M_DISTANCE_TO_BOX:
 		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.5)) break;
-		    if(!task(T_FOLLOW, 10, IR_F, 0.3)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, 10, IR_F, 0.3)) break;
 		    //printf(current y distance);
 		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
-		    if(!task(T_FOLLOW, speed, LINE,	LINE_RIGHT)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE,	LINE_RIGHT)) break;
 		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
 		    state = M_MOVE_OBSTACLE;
 		    break;
@@ -52,14 +52,14 @@ mission(int start_state, int speed)
 		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, ODOMETRY, 0.55)) break;
 		    if(!task(T_REVERSE, speed, ODOMETRY, 0.95)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
-		    if(!task(T_FORWARD, speed / 2, LINE, LINE_CROSS);
+		    if(!task(T_FORWARD, speed / 2, LINE, LINE_CROSS)) break;
 		    if(!task(T_OCTURN, speed / 2, ODOMETRY, -M_PI / 2)) break;
-			if(!task(T_FOLLOW, speed, LINE, LINE_CROSS)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 		    state = M_FIND_GHOST_GATE;
 		    break;
 		case M_FIND_GHOST_GATE:
 		    if(!task(T_FOLLOW_RIGHT, speed, LINE, LINE_CROSS)) break;
-			int temp = task(T_FOLLOW, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
+			int temp = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
 			if(!temp) break;
 			if(temp == IR_L) { //First rod found, looking for second
 				if(!task(T_FORWARD, speed / 4, ODOMETRY, 0.05));
@@ -73,7 +73,7 @@ mission(int start_state, int speed)
 					temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4); //look for second rod before first
 					if(!temp) break;
 					if(temp == IR_L) {//Second rod found behind first
-						if(!task(T_FOLLOW, speed/4, ODOMETRY, 0.45)) break;
+						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					}
@@ -86,12 +86,12 @@ mission(int start_state, int speed)
 					temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
 					if(!temp) break;
 					if(temp == IR_L) { //Second rod found while backing up
-						if(!task(T_FOLLOW, speed/4, ODOMETRY, 0.45)) break;
+						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					} else { //Second rod not found while backing up
-						if(!task(T_FOLLOW, speed/4, ODOMETRY, 0.6)) break;
-						temp = task(T_FOLLOW, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
+						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.6)) break;
+						temp = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
 						if(!temp) break;
 						if(temp == IR_L) {//Second rod found ahead of first
 							state = M_GO_THROUGH_GHOST_GATE;
@@ -110,13 +110,13 @@ mission(int start_state, int speed)
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 		case M_WALL_HUGGING: {
 			int temp;
-			temp = task(T_FOLLOW, speed, LINE | IR_L, LINE_CROSS, 0.15);
+			temp = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
 			if(!temp) break;
 			if(temp == LINE) {
 				temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.50, 0.15);
 				if(!temp) break;
 				if(temp == ODOMETRY) {
-					temp = task(T_FOLLOW, speed, LINE | IR_L, LINE_CROSS, 0.15);
+					temp = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
 					if(!temp) break;
 				}
 			} 
@@ -145,7 +145,7 @@ mission(int start_state, int speed)
 		    break;
 		}
 		case M_WHITE_IS_THE_NEW_BLACK:
-			if(!task(T_FOLLOW, speed, ODOMETRY, 0.2)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed, LINE, WHITE_LINE)) break;
 			if(!task(T_FOLLOW_WHITE_STRAIGHT, speed, LINE, LINE_CROSS)) break;
@@ -153,8 +153,8 @@ mission(int start_state, int speed)
 			if(!task(T_TURN, speed, ODOMETRY, M_PI/2)) break;
 			state = M_HARDCORE_PARKING_ACTION;
 		    break;
-		case M_HARDCORE_PARKING_ACTION:
-			if(!task(T_FOLLOW, speed/2, IR_F, 0.15)) break;
+		case M_HARDCORE_PARKING_ACTION: {
+			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.15)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.4)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
@@ -169,6 +169,7 @@ mission(int start_state, int speed)
 			if(!task(T_FORWARD, speed/2, IR_F, 0.15)) break;
 		    break;
 		}
+		}//End of switch.
 	}
     while(!finished);
 

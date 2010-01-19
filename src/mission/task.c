@@ -246,7 +246,6 @@ task(int task_id, int speed, int triggers, ...)
 	//Cleanup!
 	va_end(arguments);
 
-
 	//TODO: Terminator not found, implement properly.					
     return 0;//terminator;
 }
@@ -276,8 +275,6 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 		case T_REVERSE:
 		    break;
 		case T_WAIT:
-		    break;
-		case T_FOLLOW:
 		    break;
 		case T_FOLLOW_RIGHT:
 		    break;

@@ -20,9 +20,9 @@ typedef struct {
 	double ir_ka[IRSENSOR_N];
 	double ir_kb[IRSENSOR_N];
 	int updated;
-} calibration;
+} calibration_t;
 
-extern calibration calibration;
+extern calibration_t calibration;
 
 void load_calibration();
 void save_calibration();

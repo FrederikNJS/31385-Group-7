@@ -3,13 +3,11 @@
 #include "../main.h"
 
 int read_linesensor_raw(int no) {
-	extern output out;
 	return out.line_sensor->data[no];
 }
 
 int read_linesensor_calibrated(int no) {
-	extern calibration calibration;
-	int tmp = (100 * (read_linesensor_raw(no) - calibration->ls_black[no])) / (calibration->ls_white[no] - calibration->ls_black[no]);
+	int tmp = (100 * (read_linesensor_raw(no) - calibration.ls_black[no])) / (calibration.ls_white[no] - calibration.ls_black[no]);
 	if(tmp > 100) {
 		tmp = 100;
 	} else if(tmp < 0) {
@@ -19,7 +17,6 @@ int read_linesensor_calibrated(int no) {
 }
 
 int find_line_position(int line_color, double lineLocations[2]) {
-	extern calibration calibration;
 	int i = 0;
 	int sensor[LINESENSOR_N];
 	int start1 = 0;
@@ -38,9 +35,9 @@ int find_line_position(int line_color, double lineLocations[2]) {
 	//Detects the two lowest values and positions in the sensor data
 	for(i = 0; i < LINESENSOR_N; i++) {
 		if(line_color) {
-			sensor[i] = 100 - read_linesensor_calibrated(i, calibration);
+			sensor[i] = 100 - read_linesensor_calibrated(i);
 		} else {
-			sensor[i] = read_linesensor_calibrated(i, calibration);
+			sensor[i] = read_linesensor_calibrated(i);
 		}
 		temp = sensor[i];
 		if(temp < value1) {
