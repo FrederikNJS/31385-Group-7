@@ -9,7 +9,7 @@
 #define _odometry_h
 
 //odometry
-#define DELTA_M (M_PI * WHEEL_DIAMETER / 2000.0)
+#define DELTA_M (M_PI * calibration.wheel_base / 2000.0)
 
 extern struct odometry_state current_odometry;
 
