@@ -20,7 +20,6 @@ task(int task_id, int speed, int triggers, ...)
 	init_task_data(task_id, NULL, &task_data);
 
     long task_start = time(NULL);
-    double current_distance = 0.0;
 
     double time = 0;		//in seconds
     int line;			//special case for the line sensor*/
@@ -91,14 +90,12 @@ task(int task_id, int speed, int triggers, ...)
 
 	    //Synchronize and update odometry.
 	    rhdSync();
-	    current_odometry.left_encoder = out.encoder_left->data[0];
-	    current_odometry.right_encoder = out.encoder_right->data[0];
 	    update_odometry(&current_odometry);
 		update_task_data(&task_data);
 
 	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
 		   out.encoder_left->data[0]);
-	    printf("x, y is:  %f,  %f\n", task_data.current_distance,
+	    printf("x, y is:  %f,  %f\n", current_odometry.x,
 		   current_odometry.y);
 
 		//printf("Value of random variables. Shouldn't be null...%p\n", parameters);
@@ -116,7 +113,10 @@ task(int task_id, int speed, int triggers, ...)
 		{
 		    if(task_id & T_TURN)
 			{
-				
+				if (absanglediff(current_odometry.angle, task_data.start_angle) > absd(task_data.goal_distance)) {
+					terminator = ODOMETRY;
+					task_id = T_FINISHED;
+				}
 			}
 
 
@@ -127,11 +127,11 @@ task(int task_id, int speed, int triggers, ...)
 		    else
 			{
 			    printf("In check for length: %f \n",
-				   current_distance - task_data.goal_distance);
-			    if(current_distance - task_data.goal_distance >= 0)
+				   task_data.current_distance - task_data.goal_distance);
+			    if(task_data.current_distance - task_data.goal_distance >= 0)
 				{
 					terminator = ODOMETRY;
-					task_id= T_FINISHED;
+					task_id = T_FINISHED;
 				}
 			}
 
@@ -184,7 +184,7 @@ task(int task_id, int speed, int triggers, ...)
 		    forward(speed, &task_data);
 		    break;
 		case T_TURN:
-			turn(speed, current_odometry.angle, task_data.goal_distance);
+			turn(speed, current_odometry.angle, task_data.goal_distance, task_data.start_angle);
 		    break;
 		case T_OCTURN:
 			octurn(speed, current_odometry.angle, task_data.goal_distance);
@@ -305,5 +305,4 @@ void update_task_data(task_data_t * task_data) {
 	task_data->current_tick++;
 	task_data->current_time = time(NULL);
 	task_data->current_distance += current_odometry.dU;
-
 }

@@ -3,6 +3,7 @@
 #include "odometry.h"
 #include "../main.h"
 #include "../calibration/calibration.h"
+#include "../motion/motion.h"
 
 struct odometry_state current_odometry;
 
@@ -14,6 +15,12 @@ void update_odometry(struct odometry_state * p) {
      */
 
     short delta;
+
+    p->w = calibration.wheel_ratio;
+    p->cr = DELTA_M;
+    p->cl = p->cr;
+
+	printf("Values: %f,   %f\n",  calibration.wheel_base, calibration.wheel_ratio);
 
     /*Aging. */
     p->old_x = p->x;
@@ -31,7 +38,7 @@ void update_odometry(struct odometry_state * p) {
     else if(delta < -0x8000)
 	delta += 0x8000;*/
     p->right_encoder_old = p->right_encoder;
-    double dU_right = delta * p->cr;
+    double dU_right = delta * p->cr*calibration.wheel_ratio;
     p->right_encoder_pos += dU_right;
 
     /* U_left
@@ -45,11 +52,11 @@ void update_odometry(struct odometry_state * p) {
     else if(delta < -0x8000)
 	delta += 0x10000;*/
     p->left_encoder_old = p->left_encoder;
-    double dU_left = delta * p->cl;
+    double dU_left = delta * p->cl/calibration.wheel_ratio;
     p->left_encoder_pos += dU_left;
 
     /*dU = (dU_right + dU_left) / 2; */
-    double dU = (dU_right + dU_left) / 2;
+    double dU = absd(dU_right + dU_left) / 2;
 	p->dU = dU;
 
     /*delta O(i) = (delta U(right) - delta U(left))/wheel_distance */
