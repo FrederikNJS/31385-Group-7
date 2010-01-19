@@ -75,6 +75,8 @@ init()
 	//
 	reset_odometry(&current_odometry);
 
+	load_calibration();
+
     return 0;
 }
 
@@ -83,6 +85,7 @@ term()
 {
     task(T_STOP, 0, 0);
     rhdSync();
+	save_calibration();
     rhdDisconnect();
 }
 
