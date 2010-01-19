@@ -16,26 +16,26 @@ void load_calibration() {
 	FILE * file;
 	int i;
 	char data[512];
-	file = fopen("../../Calibration/linesensors.dat", "r");
+	file = fopen("Calibration/linesensors.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
 		calibration.ls_black[0] = atoi(strtok(data, " "));
-		calibration.ls_white[0] = atoi(strtok(NULL, " "));
+		calibration.ls_white[0] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[1] = atoi(strtok(NULL, " "));
-		calibration.ls_white[1] = atoi(strtok(NULL, " "));
+		calibration.ls_white[1] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[2] = atoi(strtok(NULL, " "));
-		calibration.ls_white[2] = atoi(strtok(NULL, " "));
+		calibration.ls_white[2] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[3] = atoi(strtok(NULL, " "));
-		calibration.ls_white[3] = atoi(strtok(NULL, " "));
+		calibration.ls_white[3] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[4] = atoi(strtok(NULL, " "));
-		calibration.ls_white[4] = atoi(strtok(NULL, " "));
+		calibration.ls_white[4] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[5] = atoi(strtok(NULL, " "));
-		calibration.ls_white[5] = atoi(strtok(NULL, " "));
+		calibration.ls_white[5] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[6] = atoi(strtok(NULL, " "));
-		calibration.ls_white[6] = atoi(strtok(NULL, " "));
+		calibration.ls_white[6] = atoi(strtok(NULL, "\n"));
 		calibration.ls_black[7] = atoi(strtok(NULL, " "));
-		calibration.ls_white[7] = atoi(strtok(NULL, " "));
+		calibration.ls_white[7] = atoi(strtok(NULL, "\n"));
 		fclose(file);
 	} else {
 		printf("ERROR: Could not read line sensor file (errno: %d)\n", errno);
@@ -47,20 +47,20 @@ void load_calibration() {
 			calibration.ls_white[i] = LN_DEFAULT_WHITE;
 		}
 	}
-	file = fopen("../../Calibration/infraredsensors.dat", "r");
+	file = fopen("Calibration/infraredsensors.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection and prettier code */
 		calibration.ir_ka[0] = atof(strtok(data, " "));
-		calibration.ir_kb[0] = atof(strtok(NULL, " "));
+		calibration.ir_kb[0] = atof(strtok(NULL, "\n"));
 		calibration.ir_ka[1] = atof(strtok(NULL, " "));
-		calibration.ir_kb[1] = atof(strtok(NULL, " "));
+		calibration.ir_kb[1] = atof(strtok(NULL, "\n"));
 		calibration.ir_ka[2] = atof(strtok(NULL, " "));
-		calibration.ir_kb[2] = atof(strtok(NULL, " "));
+		calibration.ir_kb[2] = atof(strtok(NULL, "\n"));
 		calibration.ir_ka[3] = atof(strtok(NULL, " "));
-		calibration.ir_kb[3] = atof(strtok(NULL, " "));
+		calibration.ir_kb[3] = atof(strtok(NULL, "\n"));
 		calibration.ir_ka[4] = atof(strtok(NULL, " "));
-		calibration.ir_kb[4] = atof(strtok(NULL, " "));
+		calibration.ir_kb[4] = atof(strtok(NULL, "\n"));
 	} else {
 		printf("ERROR: Could not read infrared sensor file (errno: %d)\n", errno);
 		printf("Using standard values\n");
@@ -69,12 +69,12 @@ void load_calibration() {
 			calibration.ir_kb[i] = IR_DEFAULT_KB;
 		}
 	}
-	file = fopen("../../Calibration/odometry.dat", "r");
+	file = fopen("Calibration/odometry.dat", "r");
 	if(file) {
 		fread(data, sizeof(char), 512, file);
 		/* FIXME: Need error detection */
 		calibration.wheel_base = atof(strtok(data, " "));
-		calibration.wheel_ratio = atof(strtok(NULL, " "));
+		calibration.wheel_ratio = atof(strtok(NULL, "\n"));
 	} else {
 		printf("ERROR: Could not read odometry file (errno: %d)\n", errno);
 		printf("Using standard values\n");
@@ -89,7 +89,7 @@ void save_calibration() {
 		int i = 0;
 		int length = 0;
 		FILE * file;
-		file = fopen("../../Calibration/linesensors.dat", "w+");
+		file = fopen("Calibration/linesensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < LINESENSOR_N; i++) {
 				length += sprintf(&data[length], "%d ", calibration.ls_black[i]);
@@ -102,7 +102,7 @@ void save_calibration() {
 		} else {
 			printf("ERROR: Linesensor values not saved (errno: %d)\n", errno);
 		}
-		file = fopen("../../Calibration/infraredsensors.dat", "w+");
+		file = fopen("Calibration/infraredsensors.dat", "w+");
 		if(file) {
 			for(i = 0; i < IRSENSOR_N; i++) {
 				length += sprintf(&data[length], "%f ", calibration.ir_ka[i]);
@@ -115,7 +115,7 @@ void save_calibration() {
 		} else {
 			printf("ERROR: infrared sensor values not saved (errno: %d)\n", errno);
 		}
-		file = fopen("../../Calibration/odometry.dat", "w+");
+		file = fopen("Calibration/odometry.dat", "w+");
 		if(file) {
 			length += sprintf(&data[length], "%f ", calibration.wheel_base);
 			length += sprintf(&data[length], "%f\n", calibration.wheel_ratio);

@@ -8,6 +8,7 @@
 #include "mission/mission.h"
 #include "mission/task.h"
 #include "odometry/odometry.h"
+#include "calibration/calibration.h"
 
 input in;
 output out;
@@ -74,6 +75,8 @@ init()
 	//
 	reset_odometry(&current_odometry);
 
+	load_calibration();
+
     return 0;
 }
 
@@ -82,6 +85,7 @@ term()
 {
     task(T_STOP, 0, 0);
     rhdSync();
+	save_calibration();
     rhdDisconnect();
 }
 

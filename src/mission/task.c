@@ -193,6 +193,10 @@ task(int task_id, int speed, int triggers, ...)
 			reverse(speed, &task_data);
 		    break;
 		case T_WAIT:
+			in.speed_left->data[0] = 0;
+		    in.speed_left->updated = 1;
+		    in.speed_right->data[0] = 0;
+		    in.speed_right->updated = 1;
 		    break;
 		case T_FOLLOW_RIGHT:
 			follow_line(GO_RIGHT, speed, BLACK_LINE);
