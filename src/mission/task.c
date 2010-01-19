@@ -94,7 +94,7 @@ task(int task_id, int speed, int triggers, ...)
 		update_task_data(&task_data);
 
 		//Check for ir-sensor measurement.
-		if (task_data->current_time - task_data->last_ir_sensor_measure_time > 0.200) {
+		if (task_data.current_time - task_data.last_ir_sensor_measure_time > 0.200) {
 			//TODO: Make an ir-sensor measurement here.
 		}
 
