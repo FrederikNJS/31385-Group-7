@@ -59,7 +59,7 @@ init()
 	}
 
     out.encoder_left = getinputref("encl", input_table);
-    out.encoder_right = getinputref("encr", input_table);
+    out.encoder_right = getinputref("encl", input_table);
     out.line_sensor = getinputref("linesensor", input_table);
     out.ir_sensor = getinputref("irsensor", input_table);
 

@@ -56,6 +56,7 @@ reverse(int speed, task_data_t * td)
 void
 turn(int speed, double current_angle, double expected_angle)
 {
+    extern input in;
 
     if(expected_angle < 0)
 	{
@@ -91,10 +92,6 @@ turn(int speed, double current_angle, double expected_angle)
 		    in.speed_right->updated = 1;
 		}
 	}
-}
-
-void octurn(int speed, double current_angle, double expected_angle) {
-	//TODO: Implement.
 }
 
 void
