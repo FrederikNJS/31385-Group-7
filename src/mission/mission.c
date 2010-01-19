@@ -186,5 +186,5 @@ mission(int start_state, int speed)
     while(!finished);
 
     printf("Ending mission.\n");
-    if(!task(T_STOP, 0, 0)) {}//TODO: What should be done here?
+    task(T_STOP, 0, 0);
 }
