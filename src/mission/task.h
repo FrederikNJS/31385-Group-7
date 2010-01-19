@@ -7,14 +7,16 @@
 #include "../odometry/odometry.h"
 
 enum task_states
-{ T_FORWARD, T_TURN, T_OCTURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT,
-    T_FOLLOW_STRAIGHT, T_FOLLOW_LEFT, T_STOP, T_FINISHED
+{ T_FORWARD, T_TURN, T_OCTURN, T_ROCTURN, T_REVERSE, T_WAIT, T_FOLLOW, T_FOLLOW_RIGHT,
+    T_FOLLOW_STRAIGHT, T_FOLLOW_LEFT, T_STOP, T_FINISHED, T_FOLLOW_WALL,
+	//TODO: Consider whether "follow white" is good.
+	T_FOLLOW_WHITE
 };
 
 enum
 { TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, IR_L = 1 << 3, IR_FL =
 	1 << 4, IR_FC = 1 << 5, IR_FR = 1 << 6, IR_R = 1 << 7, IR_F =
-	1 << 8, IR_F_AVG, 1 << 9
+	1 << 8, IR_F_AVG = 1 << 9
 };
 
 //Guide to parameters and task_data

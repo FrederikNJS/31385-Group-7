@@ -7,6 +7,7 @@
 #include "../odometry/odometry.h"
 #include "task.h"
 
+typedef double* double_pointer_yeah;
 int
 task(int task_id, int speed, int triggers, ...)
 {
@@ -14,15 +15,23 @@ task(int task_id, int speed, int triggers, ...)
 	
 	//Initialize the data for the current task,
 	//updating goal x, y and angle in parameters.
-	init_task_data(task_id, parameters, &task_data);
+	//init_task_data(task_id, parameters, &task_data);
+	init_task_data(task_id, NULL, &task_data);
 
     long task_start = time(NULL);
     double current_distance = 0.0;
 
     double time;		//in seconds
-    double distance;		//in centimeters
+    double distance = 0;		//in meters
     int line;			//special case for the line sensor*/
-    double ir_distance[5];	//in centimeters
+    double ir_distance[5];	//in meters
+	double * ir_distance_p = ir_distance;
+
+	//TODO: Shouldn't va_start be called first?
+	//And va_end be called at the end?
+
+	va_list arguments;
+	va_start(arguments, triggers);
 
     if(triggers & TIME)
 	{
@@ -41,7 +50,7 @@ task(int task_id, int speed, int triggers, ...)
 
     if(triggers & IR_F_AVG)
 	{
-	    ir_distance = va_arg(arguments, double);
+	    ir_distance_p = va_arg(arguments, double_pointer_yeah);
 	}
     else if(triggers & IR_F)
 	{
@@ -93,11 +102,12 @@ task(int task_id, int speed, int triggers, ...)
 	    //Sensor Checking, and reactions
 	    if(triggers & TIME)
 		{
-		    if(task_data.current_time >= task_data.start_time + parameters->time)
+			//TODO: Parameters are used here, bad.
+		    /*if(task_data.current_time >= task_data.start_time + parameters->time)
 			{
 			    task_id = T_FINISHED;
 				terminator = TIME;
-			}
+			}*/
 		}
 	    if(triggers & ODOMETRY)
 		{
@@ -117,7 +127,8 @@ task(int task_id, int speed, int triggers, ...)
 				   current_distance - distance);
 			    if(current_distance - distance >= 0)
 				{
-					terminator = TIME;
+					//TODO: Terminator not found, implement properly.
+					//terminator = TIME;
 				}
 			}
 
@@ -197,21 +208,26 @@ task(int task_id, int speed, int triggers, ...)
 	    if(arg != 0)
 		{
 		    task_id = T_FINISHED;
-			terminator = 0;
+			//TODO: Terminator not found, implement properly.
+			//terminator = 0;
 		}
 	}
 
 	//If the task didn't use the goal data, they need to be updated.
 	if (!task_data.uses_goal) {
-		parameters->goal_x = current_odometry.x;
+		/*parameters->goal_x = current_odometry.x;
 		parameters->goal_y = current_odometry.y;
-		parameters->goal_angle = current_odometry.angle;
+		parameters->goal_angle = current_odometry.angle;*/
 	}
 
     //Remember to inform the hardware about the recent changes.
 
+	//Cleanup!
+	va_end(arguments);
 
-    return terminator;
+
+	//TODO: Terminator not found, implement properly.					
+    return 0;//terminator;
 }
 
 void init_task_data(int task_id, task_parameters * parameters, task_data_t * task_data) {
@@ -226,11 +242,11 @@ void init_task_data(int task_id, task_parameters * parameters, task_data_t * tas
 	//TODO: Implement.
 	switch (task_id) {
 		case T_FORWARD:
-			task_data->goal_distance = parameters->distance;
+			//task_data->goal_distance = parameters->distance;
 			uses_goal = 1;
-			parameters->goal_angle = parameters->goal_angle;
-			parameters->goal_x = parameters->goal_x + task_data->goal_distance * cos(parameters->goal_angle);
-			parameters->goal_y = parameters->goal_y + task_data->goal_distance * sin(parameters->goal_angle);
+			//parameters->goal_angle = parameters->goal_angle;
+			//parameters->goal_x = parameters->goal_x + task_data->goal_distance * cos(parameters->goal_angle);
+			//parameters->goal_y = parameters->goal_y + task_data->goal_distance * sin(parameters->goal_angle);
 		    break;
 		case T_TURN:
 		    break;
