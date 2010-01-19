@@ -79,7 +79,7 @@ void reset_odometry(struct odometry_state * p)
     p->left_encoder_old = p->left_encoder = out.encoder_left->data[0];
     p->dU = 0;
 
-    p->w = wheel_ratio;
+    p->w = calibration.wheel_ratio;
     p->cr = DELTA_M;
     p->cl = p->cr;
 
