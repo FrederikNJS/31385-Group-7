@@ -6,6 +6,7 @@
 #define BLACK_LINE 0
 #define WHITE_LINE 1
 
+#define LINE_ANY    -4
 #define LINE_CROSS	-3
 #define LINE_RIGHT	-2
 #define LINE_LEFT	-1
