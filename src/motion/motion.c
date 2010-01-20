@@ -30,7 +30,7 @@ forward(int speed, task_data_t * td)
     extern input in;
     int mod_speed = speed_calc(speed, td->current_distance, td->goal_distance);
 
-    printf
+//    printf
 //	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
 //	 mod_speed, speed, td->current_distance, td->goal_distance);
 	
