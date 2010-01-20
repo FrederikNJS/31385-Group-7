@@ -138,16 +138,12 @@ mission(int start_state, int speed)
 				if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 				//TODO: Consider the task_status!
 				int task_status;
-				do {
-					if((task_status = !task(T_FOLLOW_WALL, speed/2, IR_L, 0.30))) break;
-				} while(task_status == IR_L);
+				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 0.3)) break;
 				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
 				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
 				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.3)) break;
 				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
-				do{
-					if((task_status = !task(T_FOLLOW_WALL, speed/2, IR_L))) break;
-				} while(task_status==IR_L);
+				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 0.3)) break;
 				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
 				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
 				if(!task(T_FORWARD, speed, LINE, LINE_CROSS)) break;
@@ -161,7 +157,7 @@ mission(int start_state, int speed)
 		case M_WHITE_IS_THE_NEW_BLACK:
 			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
-			if(!task(T_FORWARD, speed, LINE, WHITE_LINE)) break;
+			if(!task(T_FORWARD, speed, LINE_W, LINE_ANY)) break;
 			if(!task(T_FOLLOW_WHITE_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.3)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI/2)) break;

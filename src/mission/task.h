@@ -10,13 +10,15 @@ enum task_states
 { T_FORWARD, T_TURN, T_OCTURN, T_ROCTURN, T_REVERSE, T_WAIT,
     T_FOLLOW_RIGHT, T_FOLLOW_STRAIGHT, T_FOLLOW_LEFT, T_STOP, T_FINISHED,
     T_FOLLOW_WALL, T_FOLLOW_WHITE_STRAIGHT, T_FOLLOW_WHITE_LEFT,
-	T_FOLLOW_WHITE_RIGHT
+    T_FOLLOW_WHITE_RIGHT
 };
 
-enum
-{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, IR_L = 1 << 3, IR_FL =
-	1 << 4, IR_FC = 1 << 5, IR_FR = 1 << 6, IR_R = 1 << 7, IR_F =
-	1 << 8, IR_F_AVG = 1 << 9
+enum triggers
+{ TIME = 1, ODOMETRY = 1 << 1, LINE = 1 << 2, LINE_W = 1 << 3, IR_L =
+	1 << 4, IR_FL = 1 << 5, IR_FC = 1 << 6, IR_FR = 1 << 7, IR_R =
+	1 << 8, IR_F = 1 << 9, IR_F_AVG = 1 << 10, NIR_L = 1 << 11, NIR_FL =
+	1 << 12, NIR_FC = 1 << 13, NIR_FR = 1 << 14, NIR_R = 1 << 15, NIR_F =
+	1 << 16, NIR_F_AVG = 1 << 17
 };
 
 //Guide to parameters and task_data
