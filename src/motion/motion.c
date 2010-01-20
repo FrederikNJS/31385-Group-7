@@ -32,7 +32,7 @@ forward(int speed, task_data_t * td)
 
     printf
 //	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
-	 mod_speed, speed, td->current_distance, td->goal_distance);
+//	 mod_speed, speed, td->current_distance, td->goal_distance);
 	
 	//printf("angle diff: %f\n", 10.0 * absanglediff(td->start_angle, current_odometry.angle));
 
