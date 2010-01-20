@@ -6,6 +6,7 @@
 #include "../motion/motion.h"
 #include "../odometry/odometry.h"
 #include "../linesensor/linesensor.h"
+#include "../infrared/infrared.h"
 #include "task.h"
 
 typedef double *double_pointer_yeah;
@@ -140,7 +141,7 @@ task(int task_id, int speed, int triggers, ...)
 	    if(triggers & LINE)
 		{
 		    double lines[2];
-		    line_case = find_line_position(BLACK_LINE, line);
+		    int line_case = find_line_position(BLACK_LINE, lines);
 		    if(line_case == line || ((line == -4) && line_case))
 			{
 			    terminator = ODOMETRY;
@@ -241,7 +242,7 @@ task(int task_id, int speed, int triggers, ...)
 		    break;
 		case T_FOLLOW_WALL:
 
-		    if(ir_updated = 1)
+		    if(ir_updated == 1)
 			{
 			    ir_updated = 0;
 			}
