@@ -9,7 +9,7 @@
 void
 mission(int start_state, int speed)
 {
-    printf("Mission entered at state %d with speed %d\n", start_state, speed);
+//    printf("Mission entered at state %d with speed %d\n", start_state, speed);
     char finished = 1;
     int state = start_state;
     int i;
@@ -52,6 +52,7 @@ mission(int start_state, int speed)
 			finished = 0;
 		    break;
 		case M_MOVE_OBSTACLE:
+			printf("Move box\n");
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 2.5)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, speed, IR_F, 0.3)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, IR_F, 0.15)) break;
@@ -65,6 +66,7 @@ mission(int start_state, int speed)
 			finished = 0;
 		    break;
 		case M_FIND_GHOST_GATE:
+			printf("Ghost gate\n");
 		    if(!task(T_FOLLOW_RIGHT, speed, LINE, LINE_CROSS)) break;
 			int task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
 			if(!task_status) break;
@@ -115,12 +117,14 @@ mission(int start_state, int speed)
 			state = M_WALL_HUGGING;
 			break;
 		case M_GO_THROUGH_GHOST_GATE:
+			printf("Go through ghost gate\n");
 			if(!task(T_TURN, speed/4, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.5)) break;
 			if(!task(T_TURN, speed, LINE, BLACK_LINE)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 		case M_WALL_HUGGING: {
+			printf("wall\n");
 			int task_status;
 			task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
 			if(!task_status) break;
@@ -151,6 +155,7 @@ mission(int start_state, int speed)
 		    break;
 		}
 		case M_WHITE_IS_THE_NEW_BLACK:
+			printf("white line\n");
 			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed, LINE_W, LINE_ANY)) break;
@@ -161,6 +166,7 @@ mission(int start_state, int speed)
 			state = M_HARDCORE_PARKING_ACTION;
 		    break;
 		case M_HARDCORE_PARKING_ACTION: {
+			printf("tunnel\n");
 			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.15)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.4)) break;

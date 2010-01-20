@@ -20,7 +20,7 @@ void update_odometry(struct odometry_state * p) {
     p->cr = DELTA_M;
     p->cl = p->cr;
 
-	printf("Values: %f,   %f\n",  calibration.wheel_base, calibration.wheel_ratio);
+//	printf("Values: %f,   %f\n",  calibration.wheel_base, calibration.wheel_ratio);
 
     /*Aging. */
     p->old_x = p->x;
@@ -74,7 +74,7 @@ void update_odometry(struct odometry_state * p) {
     p->x = p->old_x + dU * cos(p->angle);
     p->y = p->old_y + dU * sin(p->angle);
 
-	printf("state_odo: x:%f, y:%f, dU:%f, dO%f\n", p->x, p->y, dU, dO);
+//	printf("state_odo: x:%f, y:%f, dU:%f, dO%f\n", p->x, p->y, dU, dO);
 }
 
 void reset_odometry(struct odometry_state * p)
@@ -90,5 +90,5 @@ void reset_odometry(struct odometry_state * p)
     p->cr = DELTA_M;
     p->cl = p->cr;
 
-	printf("reset, state_odo: x:%f, y:%f, dU:%f\n", p->x, p->y, p->dU);
+//	printf("reset, state_odo: x:%f, y:%f, dU:%f\n", p->x, p->y, p->dU);
 }

@@ -31,7 +31,7 @@ forward(int speed, task_data_t * td)
     int mod_speed = speed_calc(speed, td->current_distance, td->goal_distance);
 
     printf
-	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
+//	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
 	 mod_speed, speed, td->current_distance, td->goal_distance);
 	
 	//printf("angle diff: %f\n", 10.0 * absanglediff(td->start_angle, current_odometry.angle));
@@ -50,8 +50,8 @@ forward(int speed, task_data_t * td)
 	    in.speed_right->updated = 1;
 	}
 
-	printf("speed: %f\n", mod_speed + speed_diff);
-	printf("speed2: %f\n", mod_speed - speed_diff);
+//	printf("speed: %f\n", mod_speed + speed_diff);
+//	printf("speed2: %f\n", mod_speed - speed_diff);
 
 }
 
@@ -61,9 +61,9 @@ reverse(int speed, task_data_t * td)
     extern input in;
     int mod_speed = speed_calc(speed, td->current_distance, td->goal_distance);
 
-    printf
-	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
-	 mod_speed, speed, td->current_distance, td->goal_distance);
+//    printf
+//	("In forward, mod_speed is: %d,  speed is:  %d,  curr. dist is: %f,  exp. dist: %f\n",
+//	 mod_speed, speed, td->current_distance, td->goal_distance);
 
     double speed_diff = 100.0 * (td->start_angle - current_odometry.angle);
 
@@ -90,7 +90,7 @@ turn(int speed, double current_angle, double expected_angle, double start_angle)
 	    int mod_speed =
 		speed_calc(speed, 0.132555523517358448 * absanglediff(current_angle, start_angle),
 			   absd(0.132555523517358448 * expected_angle));
-		printf("Speed: %d\n", mod_speed);
+//		printf("Speed: %d\n", mod_speed);
 
 	    if(in.speed_left->data[0] != mod_speed)
 		{
@@ -108,7 +108,7 @@ turn(int speed, double current_angle, double expected_angle, double start_angle)
 	    int mod_speed =
 		speed_calc(speed, 0.132555523517358448 * absanglediff(current_angle, start_angle),
 			   absd(0.132555523517358448 * expected_angle));
-		printf("Speed: %d\n", mod_speed);
+//		printf("Speed: %d\n", mod_speed);
 
 	    if(in.speed_left->data[0] != mod_speed)
 		{
@@ -170,23 +170,23 @@ speed_calc(double max_speed, double current_distance,
 {
     double speed = 80*sqrt(current_distance) + 1;
     double speed2 = 80*sqrt((expected_distance - current_distance))+1;
-	printf("speed: %f, speed2: %f, max_speed: %f, curr: %f exp: %f\n", speed, speed2, max_speed, current_distance, expected_distance);
+//	printf("speed: %f, speed2: %f, max_speed: %f, curr: %f exp: %f\n", speed, speed2, max_speed, current_distance, expected_distance);
     if(speed <= 0 || speed2 <= 0 || speed2 != speed2)
 	{
-	    printf("speed0:     0\n");
+//	    printf("speed0:     0\n");
 	    return 0;
 	}
     if(speed <= max_speed && speed <= speed2)
 	{
-	    printf("speed:     %f\n", speed);
+//	    printf("speed:     %f\n", speed);
 	    return (double) speed;
 	}
     if(max_speed <= speed && max_speed <= speed2)
 	{
-	    printf("max_speed: %f\n", (double) max_speed);
+//	    printf("max_speed: %f\n", (double) max_speed);
 	    return (double) max_speed;
 	}
-    printf("speed2:    %f\n", speed2);
+//    printf("speed2:    %f\n", speed2);
     return (double) speed2;
 }
 
