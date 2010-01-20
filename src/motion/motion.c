@@ -199,7 +199,7 @@ void follow_line(int direction, double max_speed, int line_color) {
 void line_speed_calculation(int direction, double max_speed, int situation, double line[2]) {
 	in.speed_left->data[0] = max_speed;
 	in.speed_right->data[0] = max_speed;
-	switch(retval) {
+	switch(situation) {
 		case LINE_SINGLE:
 			//Same action for all, just follow the line
 			if(line[0] > 3.5) {
