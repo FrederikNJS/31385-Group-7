@@ -202,6 +202,7 @@ void line_speed_calculation(int direction, double max_speed, int situation, doub
 	switch(situation) {
 		case LINE_SINGLE:
 			//Same action for all, just follow the line
+			printf("line: %f\n", line[0]);
 			if(line[0] > 3.5) {
 				in.speed_left->data[0] *= (2-line[0]/3.5);
 			} else {
@@ -212,6 +213,7 @@ void line_speed_calculation(int direction, double max_speed, int situation, doub
 			//Straight have nothing to do here
 			if(direction != GO_STRAIGHT) {
 				int tmp = direction == GO_RIGHT ? 0 : 1;
+				printf("line: %f\n", line[tmp]);
 				if(line[tmp] > 3.5) {
 					in.speed_left->data[0] *= (2-line[tmp]/3.5);
 				} else {
@@ -222,20 +224,24 @@ void line_speed_calculation(int direction, double max_speed, int situation, doub
 		case LINE_LEFT:
 			//Only left have something to do here
 			if(direction == GO_LEFT) {
+				printf("line: %f\n", line[0]);
 				in.speed_left->data[0] = 0;
 			}
 			break;
 		case LINE_RIGHT:
 			//Only right have something to do here
 			if(direction == GO_RIGHT) {
+				printf("line: %f\n", line[0]);
 				in.speed_right->data[0] = 0;
 			}
 			break;
 		case LINE_CROSS:
 			//Straight have nothing to do here
 			if(direction == GO_RIGHT) {
+				printf("line: %f\n", line[0]);
 				in.speed_right->data[0] = 0;
 			} else if(direction == GO_LEFT) {
+				printf("line: %f\n", line[0]);
 				in.speed_left->data[0] = 0;
 			}
 			break;
