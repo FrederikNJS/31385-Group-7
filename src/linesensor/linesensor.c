@@ -40,6 +40,11 @@ int find_line_position(int line_color, double lineLocations[2]) {
 			sensor[i] = read_linesensor_calibrated(i);
 		}
 		temp = sensor[i];
+		if(i == LINESENSOR_N - 1) {
+			printf("%d\n", temp);
+		} else {
+			printf("%d ", temp);
+		}
 		if(temp < value1) {
 			lowest1 = i;
 			value1 = temp;
