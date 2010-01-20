@@ -8,9 +8,15 @@ int read_irsensor_raw(int no) {
 }
 
 double read_irsensor_distance(int no) {
-	return calibration.ir_ka[no] / ((double) read_irsensor_raw(no) - calibration.ir_kb[no]);
+	//s - b should never be zero or below. Handle it.
+	double s_b = read_irsensor_raw(no) - calibration.ir_kb[no];
+	if (!(s_b > 0)) s_b = 0.1;
+	return calibration.ir_ka[no] / ((double) s_b);
 }
 
 int is_closer_than(int no, double dist) {
-	return (calibration.ir_ka[no] / dist) + calibration.ir_kb[no] < read_irsensor_raw(no) ? 1 : 0;
+	
+	double s_b = read_irsensor_raw(no) - calibration.ir_kb[no];
+	if (!(s_b > 0)) s_b = 0.1;
+	return (calibration.ir_ka[no] / dist)  < s_b ? 1 : 0;
 }

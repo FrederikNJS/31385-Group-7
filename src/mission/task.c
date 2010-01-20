@@ -39,6 +39,7 @@ task(int task_id, int speed, int triggers, ...)
     if(triggers & ODOMETRY)
 	{
 	    task_data.goal_distance = va_arg(arguments, double);
+		printf("gd: %f\n", task_data.goal_distance);
 	}
 
     if(triggers & LINE)
@@ -83,14 +84,17 @@ task(int task_id, int speed, int triggers, ...)
 	    rhdSync();
 	    update_odometry(&current_odometry);
 	    update_task_data(&task_data);
+            
+//	    printf("dist: %f\n", task_data.current_distance);
 
 	    //Check for ir-sensor measurement.
-	    if((triggers &
-		(IR_L || IR_FL || IR_FC || IR_FR || IR_R || IR_F || IR_F_AVG)
-		|| task_id == T_FOLLOW_WALL)
+	    if(((triggers &
+		(IR_L | IR_FL | IR_FC | IR_FR | IR_R | IR_F | IR_F_AVG))
+		|| (task_id == T_FOLLOW_WALL))
 	       && task_data.current_time -
 	       task_data.last_ir_sensor_measure_time > 0.200)
 		{
+			task_data.last_ir_sensor_measure_time = task_data.current_time;
 		    ir_updated = 1;
 		}
 
@@ -112,12 +116,15 @@ task(int task_id, int speed, int triggers, ...)
 		}
 	    if(triggers & ODOMETRY)
 		{
-		    if(task_id & T_TURN || task_id & T_OCTURN)
+		    if((task_id == T_TURN) || (task_id == T_OCTURN))
 			{
-			    if(absanglediff
+				double destination_angle = task_data.start_angle - task_data.goal_distance;
+			    /*if(absanglediff
 			       (current_odometry.angle,
 				task_data.start_angle) >
-			       absd(task_data.goal_distance))
+			       absd(task_data.goal_distance))*/
+//				printf("Desty, curry: %f,    %f\n", destination_angle, current_odometry.angle);
+				if (absanglediff(current_odometry.angle, destination_angle) < 0.05)
 				{
 				    terminator = ODOMETRY;
 				    task_id = T_FINISHED;
@@ -125,9 +132,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    else
 			{
-			    printf("In check for length: %f \n",
-				   task_data.current_distance -
-				   task_data.goal_distance);
+				//printf("gd: %f\n", task_data.goal_distance);
 			    if(task_data.current_distance -
 			       task_data.goal_distance >= 0)
 				{
@@ -137,13 +142,18 @@ task(int task_id, int speed, int triggers, ...)
 			}
 
 		}
-	    if(triggers & LINE)
+	    if(triggers & LINE || triggers & LINE_W)
 		{
 		    double lines[2];
-		    int line_case = find_line_position(BLACK_LINE, lines);
-		    if(line_case == line || ((line == -4) && line_case))
+			int line_case;
+			if(triggers & LINE) {
+		    	line_case = find_line_position(BLACK_LINE, lines);
+			} else {
+				line_case = find_line_position(WHITE_LINE, lines);
+			}
+		    if(line_case == line || ((line == LINE_ANY) && line_case))
 			{
-			    terminator = ODOMETRY;
+			    terminator = LINE;
 			    task_id = T_FINISHED;
 			}
 		}
@@ -160,23 +170,23 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_FL || triggers & IR_F)
 			{
-			    if(is_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(1, ir_distance[1]))
 				{
 				    terminator = IR_FL;
 				    task_id = T_FINISHED;
 				}
 			}
-		    if(triggers & IR_FC || triggers & IR_F)
+		    if((triggers & IR_FC) || (triggers & IR_F))
 			{
-			    if(is_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(2, ir_distance[2]))
 				{
 				    terminator = IR_FC;
 				    task_id = T_FINISHED;
 				}
 			}
-		    if(triggers & IR_FR || triggers & IR_F)
+		    if((triggers & IR_FR) || (triggers & IR_F))
 			{
-			    if(is_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(3, ir_distance[3]))
 				{
 				    terminator = IR_FR;
 				    task_id = T_FINISHED;
@@ -184,7 +194,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_R)
 			{
-			    if(is_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(4, ir_distance[4]))
 				{
 				    terminator = IR_R;
 				    task_id = T_FINISHED;
@@ -209,8 +219,8 @@ task(int task_id, int speed, int triggers, ...)
 			 task_data.goal_distance, task_data.start_angle);
 		    break;
 		case T_OCTURN:
-		    octurn(speed, current_odometry.angle,
-			   task_data.goal_distance);
+		    off_center_turn(speed, current_odometry.angle,
+			   task_data.goal_distance, task_data.start_angle);
 		    break;
 		case T_REVERSE:
 		    reverse(speed, &task_data);
@@ -245,6 +255,21 @@ task(int task_id, int speed, int triggers, ...)
 			{
 			    ir_updated = 0;
 			}
+			
+			//Input interval is: 10..30
+			//Output interval is: 0..2
+			//Transformation is: (in-10)/20 * 2
+			double final_value = 7-((read_irsensor_distance(0)*100.-10.)/20. * 2.+2.5);
+
+			if (final_value < 2.5) final_value = 2.5;
+			if (final_value > 4.5) final_value = 4.5;
+
+			printf("Value of ze distance: %f\n", read_irsensor_distance(0));
+			printf("Value of ze final value: %f\n", final_value);
+
+			double line[2];
+			line[0] = line[1] = final_value;
+			line_speed_calculation(GO_STRAIGHT, speed, LINE_SINGLE, line);
 		case T_STOP:
 //		    printf("STOP\n");
 		    break;
@@ -284,7 +309,7 @@ task(int task_id, int speed, int triggers, ...)
 
     //Cleanup!
     va_end(arguments);
-
+    printf("terminator: %d", terminator);
     return terminator;
 }
 
