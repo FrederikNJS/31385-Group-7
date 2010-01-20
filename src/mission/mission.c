@@ -16,7 +16,6 @@ mission(int start_state, int speed)
 	
 	//TODO: Currently, [2010-01-19, 9:57], these variables are unused.
 	//Consider their survival.
-	int term;
 
     do
 	{
@@ -67,44 +66,44 @@ mission(int start_state, int speed)
 		    break;
 		case M_FIND_GHOST_GATE:
 		    if(!task(T_FOLLOW_RIGHT, speed, LINE, LINE_CROSS)) break;
-			int temp = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
-			if(!temp) break;
-			if(temp == IR_L) { //First rod found, looking for second
+			int task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
+			if(!task_status) break;
+			if(task_status == IR_L) { //First rod found, looking for second
 				if(!task(T_FORWARD, speed / 4, ODOMETRY, 0.05));
-				temp = task(T_FORWARD, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
-				if(!temp) break;
-				if(temp == IR_L) { //Second rod found, success!
+				task_status = task(T_FORWARD, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
+				if(!task_status) break;
+				if(task_status == IR_L) { //Second rod found, success!
 					finished = 0;
 					state = M_GO_THROUGH_GHOST_GATE;
 					break;
 				} else { //Second rod not found
 					if(!task(T_REVERSE, speed/4, ODOMETRY, 0.6)) break; //Reverse to before first rod
-					temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4); //look for second rod before first
-					if(!temp) break;
-					if(temp == IR_L) {//Second rod found behind first
+					task_status = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4); //look for second rod before first
+					if(!task_status) break;
+					if(task_status == IR_L) {//Second rod found behind first
 						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
 						finished = 0;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					}
 				}
-			} else if (temp == ODOMETRY){ //No rods found
-				temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
-				if(!temp) break;
-				if(temp == IR_L) { // First rod found while backing up
+			} else if (task_status == ODOMETRY){ //No rods found
+				task_status = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
+				if(!task_status) break;
+				if(task_status == IR_L) { // First rod found while backing up
 					if(!task(T_REVERSE, speed / 4, ODOMETRY, 0.05)) break;
-					temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
-					if(!temp) break;
-					if(temp == IR_L) { //Second rod found while backing up
+					task_status = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
+					if(!task_status) break;
+					if(task_status == IR_L) { //Second rod found while backing up
 						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.45)) break;
 						finished = 0;
 						state = M_GO_THROUGH_GHOST_GATE;
 						break;
 					} else { //Second rod not found while backing up
 						if(!task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY, 0.6)) break;
-						temp = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
-						if(!temp) break;
-						if(temp == IR_L) {//Second rod found ahead of first
+						task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 0.5, 0.4);
+						if(!task_status) break;
+						if(task_status == IR_L) {//Second rod found ahead of first
 							finished = 0;
 							state = M_GO_THROUGH_GHOST_GATE;
 							break;
@@ -122,22 +121,20 @@ mission(int start_state, int speed)
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 		case M_WALL_HUGGING: {
-			int temp;
-			temp = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
-			if(!temp) break;
-			if(temp == LINE) {
-				temp = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.50, 0.15);
-				if(!temp) break;
-				if(temp == ODOMETRY) {
-					temp = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
-					if(!temp) break;
+			int task_status;
+			task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
+			if(!task_status) break;
+			if(task_status == LINE) {
+				task_status = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.50, 0.15);
+				if(!task_status) break;
+				if(task_status == ODOMETRY) {
+					task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
+					if(!task_status) break;
 				}
 			} 
-			if(temp == IR_L) {
+			if(task_status == IR_L) {
 				if(!task(T_FORWARD, speed, ODOMETRY, 0.40)) break;
 				if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
-				//TODO: Consider the task_status!
-				int task_status;
 				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 0.3)) break;
 				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
 				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
@@ -147,7 +144,6 @@ mission(int start_state, int speed)
 				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
 				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
 				if(!task(T_FORWARD, speed, LINE, LINE_CROSS)) break;
-				
 				break;
 			}
 			finished = 0;
