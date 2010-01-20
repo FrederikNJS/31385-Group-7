@@ -74,11 +74,10 @@ task(int task_id, int speed, int triggers, ...)
 		    ir_distance[4] = va_arg(arguments, double);
 		}
 	}
+	    printf("Current task id: %d\n", task_id);
 
     while(task_id != T_STOP)
 	{
-
-//	    printf("Current task id: %d\n", task_id);
 
 	    //Synchronize and update odometry.
 	    rhdSync();
@@ -202,7 +201,7 @@ task(int task_id, int speed, int triggers, ...)
 	    switch (task_id)
 		{
 		case T_FORWARD:
-		    printf("Forward.\n");
+//		    printf("Forward.\n");
 		    forward(speed, &task_data);
 		    break;
 		case T_TURN:
@@ -247,7 +246,7 @@ task(int task_id, int speed, int triggers, ...)
 			    ir_updated = 0;
 			}
 		case T_STOP:
-		    printf("STOP\n");
+//		    printf("STOP\n");
 		    break;
 		case T_FINISHED:
 		    in.speed_left->data[0] = 0;
