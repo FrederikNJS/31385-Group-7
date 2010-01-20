@@ -19,8 +19,6 @@ task(int task_id, int speed, int triggers, ...)
     //init_task_data(task_id, parameters, &task_data);
     init_task_data(task_id, NULL, &task_data);
 
-    long task_start = time(NULL);
-
     double time = 0;		//in seconds
     int line;			//special case for the line sensor*/
     double ir_distance[5];	//in meters
