@@ -78,7 +78,7 @@ task(int task_id, int speed, int triggers, ...)
     while(task_id != T_STOP)
 	{
 
-	    printf("Current task id: %d\n", task_id);
+//	    printf("Current task id: %d\n", task_id);
 
 	    //Synchronize and update odometry.
 	    rhdSync();
@@ -95,10 +95,10 @@ task(int task_id, int speed, int triggers, ...)
 		    ir_updated = 1;
 		}
 
-	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
-		   out.encoder_left->data[0]);
-	    printf("x, y is:  %f,  %f\n", current_odometry.x,
-		   current_odometry.y);
+//	    printf("r, l is:  %d,  %d\n", out.encoder_right->data[0],
+//		   out.encoder_left->data[0]);
+//	    printf("x, y is:  %f,  %f\n", current_odometry.x,
+//		   current_odometry.y);
 
 	    //printf("Value of random variables. Shouldn't be null...%p\n", parameters);
 
