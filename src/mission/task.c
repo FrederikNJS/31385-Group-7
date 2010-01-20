@@ -6,6 +6,7 @@
 #include "../motion/motion.h"
 #include "../odometry/odometry.h"
 #include "../linesensor/linesensor.h"
+#include "../infrared/infrared.h"
 #include "task.h"
 
 typedef double *double_pointer_yeah;
@@ -20,8 +21,8 @@ task(int task_id, int speed, int triggers, ...)
     init_task_data(task_id, NULL, &task_data);
 
     double time = 0;		//in seconds
-    int line;			//special case for the line sensor*/
-    double ir_distance[5];	//in meters
+    int line = 0;			//special case for the line sensor*/
+    double ir_distance[5] = {0,0,0,0,0};	//in meters
 
     int ir_updated = 0;
 
@@ -140,7 +141,7 @@ task(int task_id, int speed, int triggers, ...)
 	    if(triggers & LINE)
 		{
 		    double lines[2];
-		    line_case = find_line_position(BLACK_LINE, line);
+		    int line_case = find_line_position(BLACK_LINE, lines);
 		    if(line_case == line || ((line == -4) && line_case))
 			{
 			    terminator = ODOMETRY;
@@ -152,7 +153,7 @@ task(int task_id, int speed, int triggers, ...)
 		{
 		    if(triggers & IR_L)
 			{
-			    if(ir_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(0, ir_distance[0]))
 				{
 				    terminator = IR_L;
 				    task_id = T_FINISHED;
@@ -160,7 +161,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_FL || triggers & IR_F)
 			{
-			    if(ir_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(0, ir_distance[0]))
 				{
 				    terminator = IR_FL;
 				    task_id = T_FINISHED;
@@ -168,7 +169,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_FC || triggers & IR_F)
 			{
-			    if(ir_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(0, ir_distance[0]))
 				{
 				    terminator = IR_FC;
 				    task_id = T_FINISHED;
@@ -176,7 +177,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_FR || triggers & IR_F)
 			{
-			    if(ir_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(0, ir_distance[0]))
 				{
 				    terminator = IR_FR;
 				    task_id = T_FINISHED;
@@ -184,7 +185,7 @@ task(int task_id, int speed, int triggers, ...)
 			}
 		    if(triggers & IR_R)
 			{
-			    if(ir_closer_than(0, ir_distance[0]))
+			    if(is_closer_than(0, ir_distance[0]))
 				{
 				    terminator = IR_R;
 				    task_id = T_FINISHED;
@@ -241,7 +242,7 @@ task(int task_id, int speed, int triggers, ...)
 		    break;
 		case T_FOLLOW_WALL:
 
-		    if(ir_updated = 1)
+		    if(ir_updated == 1)
 			{
 			    ir_updated = 0;
 			}
