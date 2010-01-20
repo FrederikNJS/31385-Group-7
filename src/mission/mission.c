@@ -12,7 +12,6 @@ mission(int start_state, int speed)
     printf("Mission entered at state %d with speed %d\n", start_state, speed);
     char finished = 1;
     int state = start_state;
-    int i;
 	
 	//TODO: Currently, [2010-01-19, 9:57], these variables are unused.
 	//Consider their survival.
