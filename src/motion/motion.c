@@ -192,8 +192,11 @@ speed_calc(double max_speed, double current_distance,
 
 void follow_line(int direction, double max_speed, int line_color) {
 	double line[2];
-	extern input in;
 	int retval = find_line_position(line_color, line);
+	line_speed_calculation(direction, max_speed, retval, line);
+}
+
+void line_speed_calculation(int direction, double max_speed, int situation, double line[2]) {
 	in.speed_left->data[0] = max_speed;
 	in.speed_right->data[0] = max_speed;
 	switch(retval) {
@@ -207,11 +210,12 @@ void follow_line(int direction, double max_speed, int line_color) {
 			break;
 		case LINE_DOUBLE:
 			//Straight have nothing to do here
-			if(direction == GO_STRAIGHT) {
-				if(line[direction == 1 ? 0 : 1] > 3.5) {
-					in.speed_left->data[0] *= (2-line[direction == 1 ? 0 : 1]/3.5);
+			if(direction != GO_STRAIGHT) {
+				int tmp = direction == GO_RIGHT ? 0 : 1;
+				if(line[tmp] > 3.5) {
+					in.speed_left->data[0] *= (2-line[tmp]/3.5);
 				} else {
-					in.speed_right->data[0] *= line[direction == 1 ? 0 : 1]/3.5;
+					in.speed_right->data[0] *= line[tmp]/3.5;
 				}
 			}
 			break;
