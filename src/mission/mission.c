@@ -37,9 +37,11 @@ mission(int start_state, int speed)
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 		    break;
 		case M_DISTANCE_TO_BOX:
+			system("aplay ~/wav/I\\ Am\\ Bender\\ Please\\ Insert\\ Girder.wav");
 		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.5)) break;
 		    if(!task(T_FOLLOW_RIGHT, 10, IR_F, 0.15)) break;
 			printf("Distance to box: %f\n", (current_odometry.y - 0.2 - read_irsensor_distance(2))*(-1));
+			system("aplay ~/wav/I\\'ll\\ have\\ to\\ check\\ my\\ program\\,\\ yep.wav");
 		    if(!task(T_TURN, speed/2, ODOMETRY, M_PI)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_DOUBLE)) break;;
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.1)) break;
@@ -49,7 +51,8 @@ mission(int start_state, int speed)
 		    break;
 		case M_MOVE_OBSTACLE:
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 1.0)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
+			system("aplay ~/wav/Aww\\ man\\,\\ that\\ crap\\'s\\ heavy.wav");
 		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, ODOMETRY, 0.15)) break;
 		    if(!task(T_REVERSE, speed, ODOMETRY, 0.95)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
@@ -63,7 +66,8 @@ mission(int start_state, int speed)
 		    if(!task(T_FORWARD, speed, ODOMETRY, 0.05)) break;
 		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.0)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.1)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 1.5)) break;
+			system("aplay ~/wav/Saw\\ a\\ two.wav");
 		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 /*			int task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
 			if(!task_status) break;
@@ -126,6 +130,7 @@ mission(int start_state, int speed)
 				if(!task(T_OCTURN, speed, ODOMETRY, -M_PI/2)) break;
 				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 1.0)) break;
 				if(!task(T_FORWARD, speed/3, ODOMETRY, 0.21)) break;
+				system("aplay ~/wav/I\\ Don\\'t\\ Need\\ To\\ Drink\\ I\\ Can\\ Quit\\ Anytime\\ I\\ Want.wav");
 				if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
 				if(!task(T_REVERSE, speed/2, ODOMETRY, 1.0)) break;
 				if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
@@ -140,6 +145,7 @@ mission(int start_state, int speed)
 			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.8)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/3)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.1)) break;
+			system("aplay ~/wav/Addictive.wav");
 			if(!task(T_FOLLOW_WHITE_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI/2)) break;
@@ -160,6 +166,7 @@ mission(int start_state, int speed)
 			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.05)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, -2*M_PI/5)) break;
 			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.3)) break;
+			system("aplay ~/wav/Xmas.wav");
 			finished = 1;
 		    break;
 		}

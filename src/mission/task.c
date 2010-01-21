@@ -315,6 +315,17 @@ task(int task_id, int speed, int triggers, ...)
 	    //printf("After keyboard.\n");
 	}
 
+	if(terminator==0) {
+		system("aplay ~/wav/sick.wav");
+	}
+
+	in.speed_left->data[0] = 0;
+    in.speed_left->updated = 1;
+    in.speed_right->data[0] = 0;
+    in.speed_right->updated = 1;
+
+	rhdSync();
+
     //If the task didn't use the goal data, they need to be updated.
     if(!task_data.uses_goal)
 	{
