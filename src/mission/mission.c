@@ -5,6 +5,7 @@
 #include "task.h"
 #include "../main.h"
 #include "../linesensor/linesensor.h"
+#include "../infrared/infrared.h"
 
 void
 mission(int start_state, int speed)
@@ -23,15 +24,11 @@ mission(int start_state, int speed)
 	    switch (state)
 		{
 		case M_START:
-		    printf("Entered start mission.\n");
 		    if(!task(T_FORWARD, speed, ODOMETRY, 1.0)) break;
 		    break;
 		case M_SQUARE:
-			printf("In the square1!\n");
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
-			printf("In the square2!\n");
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
-			printf("In the square3!\n");
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
@@ -40,35 +37,35 @@ mission(int start_state, int speed)
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 		    break;
 		case M_DISTANCE_TO_BOX:
-			printf("In the box\n");
-		    if(!task(T_FOLLOW_RIGHT, speed, IR_F, 0.3)) break;
+		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.5)) break;
 		    if(!task(T_FOLLOW_RIGHT, 10, IR_F, 0.15)) break;
-		    //printf(current y distance);
-		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_RIGHT)) break;
-		    if(!task(T_TURN, speed, ODOMETRY, M_PI/2.)) break;
+			printf("Distance to box: %f\n", (current_odometry.y - 0.2 - read_irsensor_distance(2))*(-1));
+		    if(!task(T_TURN, speed/2, ODOMETRY, M_PI)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_DOUBLE)) break;;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.1)) break;
+		    if(!task(T_TURN, speed/2, ODOMETRY, M_PI/2.)) break;
 		    state = M_MOVE_OBSTACLE;
 			finished = 0;
 		    break;
 		case M_MOVE_OBSTACLE:
-			printf("Move box\n");
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 1.0)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed, IR_F, 0.3)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, IR_F, 0.15)) break;
-		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, ODOMETRY, 0.55)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed / 2, ODOMETRY, 0.15)) break;
 		    if(!task(T_REVERSE, speed, ODOMETRY, 0.95)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI / 2)) break;
 		    if(!task(T_FORWARD, speed / 2, LINE, LINE_CROSS)) break;
-		    if(!task(T_OCTURN, speed / 2, ODOMETRY, -M_PI / 2)) break;
+		    if(!task(T_OCTURN, speed / 2, ODOMETRY, -2*M_PI / 5)) break;
 			if(!task(T_FOLLOW_STRAIGHT, speed/2, LINE, LINE_CROSS)) break;
 		    state = M_FIND_GHOST_GATE;
 			finished = 0;
 		    break;
 		case M_FIND_GHOST_GATE:
-			printf("Ghost gate\n");
+		    if(!task(T_FORWARD, speed, ODOMETRY, 0.05)) break;
+		    if(!task(T_FOLLOW_RIGHT, speed, ODOMETRY, 1.0)) break;
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 		    if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.1)) break;
-		    if(!task(T_FOLLOW_RIGHT, speed, LINE, LINE_CROSS)) break;
-			int task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
+		    if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
+/*			int task_status = task(T_FOLLOW_STRAIGHT, speed/4, ODOMETRY | IR_L, 1.5, 0.4);
 			if(!task_status) break;
 			if(task_status == IR_L) { //First rod found, looking for second
 				if(!task(T_FORWARD, speed / 4, ODOMETRY, 0.05));
@@ -112,91 +109,68 @@ mission(int start_state, int speed)
 						}
 					}
 				}
-			}
+			}*/
 			finished = 0;
 			state = M_WALL_HUGGING;
 			break;
 		case M_GO_THROUGH_GHOST_GATE:
-			printf("Go through ghost gate\n");
 			if(!task(T_TURN, speed/4, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.5)) break;
 			if(!task(T_TURN, speed, LINE, BLACK_LINE)) break;
 			if(!task(T_FORWARD, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
 		case M_WALL_HUGGING: {
-			printf("wall\n");
 			int task_status;
-			task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
-			if(!task_status) break;
-			if(task_status == LINE) {
-				task_status = task(T_REVERSE, speed/4, ODOMETRY | IR_L, 0.50, 0.15);
-				if(!task_status) break;
-				if(task_status == ODOMETRY) {
-					task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.15);
-					if(!task_status) break;
-				}
-			} 
-			if(task_status == IR_L) {
-				if(!task(T_FORWARD, speed, ODOMETRY, 0.60)) break;
-				if(!task(T_TURN, speed, ODOMETRY, -M_PI/2)) break;
-				if(!task(T_FORWARD, speed, ODOMETRY, 0.20)) break;
-				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 0.3)) break;
-				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
-				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
-				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.3)) break;
-				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
-				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 0.3)) break;
-				if(!task(T_FORWARD, speed/2, ODOMETRY, 0.225)) break;
-				if(!task(T_TURN, speed/2, ODOMETRY, -M_PI/2)) break;
-				if(!task(T_FORWARD, speed, LINE, LINE_CROSS)) break;
-				break;
-			}
+			task_status = task(T_FOLLOW_STRAIGHT, speed, LINE | IR_L, LINE_CROSS, 0.3);
+				if(!task(T_FORWARD, speed, ODOMETRY, 0.1)) break;
+				if(!task(T_OCTURN, speed, ODOMETRY, -M_PI/2)) break;
+				if(!task(T_FOLLOW_WALL, speed/2, NIR_L, 1.0)) break;
+				if(!task(T_FORWARD, speed/3, ODOMETRY, 0.21)) break;
+				if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
+				if(!task(T_REVERSE, speed/2, ODOMETRY, 1.0)) break;
+				if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
+				if(!task(T_FOLLOW_WALL, speed/2, LINE, LINE_CROSS)) break;
+				if(!task(T_OCTURN, speed/2, ODOMETRY, -M_PI/4)) break;
+				if(!task(T_FOLLOW_STRAIGHT, speed, LINE, LINE_CROSS)) break;
 			finished = 0;
 			state = M_WHITE_IS_THE_NEW_BLACK;
 		    break;
 		}
 		case M_WHITE_IS_THE_NEW_BLACK:
-			printf("white line\n");
-			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.85)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed, ODOMETRY, 0.8)) break;
 			if(!task(T_TURN, speed, ODOMETRY, -M_PI/3)) break;
-			if(!task(T_FORWARD, speed, LINE_W, LINE_ANY)) break;
+			if(!task(T_FORWARD, speed, ODOMETRY, 0.1)) break;
 			if(!task(T_FOLLOW_WHITE_STRAIGHT, speed, LINE, LINE_CROSS)) break;
-			if(!task(T_FORWARD, speed, ODOMETRY, 0.3)) break;
+			if(!task(T_FORWARD, speed, ODOMETRY, 0.2)) break;
 			if(!task(T_TURN, speed, ODOMETRY, M_PI/2)) break;
 			finished = 0;
 			state = M_HARDCORE_PARKING_ACTION;
 		    break;
 		case M_HARDCORE_PARKING_ACTION: {
-			printf("tunnel\n");
-			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.15)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.4)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, -M_PI/2)) break;
-			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.4)) break;
+			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.5)) break;
 			if(!task(T_OCTURN, speed/2, ODOMETRY, M_PI/2)) break;
 			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.55)) break;
 			if(!task(T_ROCTURN, speed/2, ODOMETRY, -M_PI/2)) break;
 			if(!task(T_ROCTURN, speed/2, ODOMETRY, M_PI/2)) break;
-			if(!task(T_REVERSE, speed/2, ODOMETRY, 0.60)) break;
-			if(!task(T_ROCTURN, speed/2, ODOMETRY, M_PI/2)) break;
+			if(!task(T_REVERSE, speed/2, ODOMETRY, 0.40)) break;
+			if(!task(T_TURN, speed/2, ODOMETRY, M_PI/2)) break;
 			if(!task(T_FORWARD, speed/2, LINE, LINE_CROSS)) break;
-			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.15)) break;
-			if(!task(T_OCTURN, speed/2, ODOMETRY, -M_PI/2)) break;
-			if(!task(T_FORWARD, speed/2, IR_F, 0.15)) break;
+			if(!task(T_FORWARD, speed/2, ODOMETRY, 0.05)) break;
+			if(!task(T_OCTURN, speed/2, ODOMETRY, -2*M_PI/5)) break;
+			if(!task(T_FOLLOW_STRAIGHT, speed/2, IR_F, 0.3)) break;
+			finished = 1;
 		    break;
 		}
 		case M_TEST:
-
-			if(!task(T_FOLLOW_WALL, speed/2., NIR_L, 0.3)) break;
-			printf("We are far away from ze left wall, more than 30 cm! Now we turn!\n");
-			if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
-			if(!task(T_FORWARD, speed, ODOMETRY, 3.0)) break;
-			if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
-			
-
+			if(!task(T_FORWARD, 10, IR_F, 0.15)) break;
+		    if(!task(T_TURN, speed, ODOMETRY, M_PI)) break;
+		    if(!task(T_FORWARD, speed, LINE, LINE_DOUBLE)) break;
 			break;
 		}//End of switch.
 	}
     while(!finished);
 
-    printf("Ending mission.\n");
     task(T_STOP, 0, 0);
 }

@@ -39,7 +39,7 @@ task(int task_id, int speed, int triggers, ...)
     if(triggers & ODOMETRY)
 	{
 	    task_data.goal_distance = va_arg(arguments, double);
-		printf("gd: %f\n", task_data.goal_distance);
+		//printf("gd: %f\n", task_data.goal_distance);
 	}
 
     if(triggers & LINE)
@@ -74,8 +74,12 @@ task(int task_id, int speed, int triggers, ...)
 		{
 		    ir_distance[4] = va_arg(arguments, double);
 		}
+		else if(triggers & NIR_L)
+		{
+		    ir_distance[0] = va_arg(arguments, double);
+		}
 	}
-	    printf("Current task id: %d\n", task_id);
+	    //printf("Current task id: %d\n", task_id);
 
     while(task_id != T_STOP)
 	{
@@ -92,7 +96,7 @@ task(int task_id, int speed, int triggers, ...)
 		(IR_L | IR_FL | IR_FC | IR_FR | IR_R | IR_F | IR_F_AVG))
 		|| (task_id == T_FOLLOW_WALL))
 	       && task_data.current_time -
-	       task_data.last_ir_sensor_measure_time > 0.200)
+	       task_data.last_ir_sensor_measure_time > 0.1666667)
 		{
 			task_data.last_ir_sensor_measure_time = task_data.current_time;
 		    ir_updated = 1;
@@ -116,14 +120,14 @@ task(int task_id, int speed, int triggers, ...)
 		}
 	    if(triggers & ODOMETRY)
 		{
-		    if((task_id == T_TURN) || (task_id == T_OCTURN))
+		    if((task_id == T_TURN) || (task_id == T_OCTURN) || (task_id == T_ROCTURN))
 			{
 				double destination_angle = task_data.start_angle - task_data.goal_distance;
 			    /*if(absanglediff
 			       (current_odometry.angle,
 				task_data.start_angle) >
 			       absd(task_data.goal_distance))*/
-//				printf("Desty, curry: %f,    %f\n", destination_angle, current_odometry.angle);
+				//printf("Desty, curry: %f,    %f\n", destination_angle, current_odometry.angle);
 				if (absanglediff(current_odometry.angle, destination_angle) < 0.05)
 				{
 				    terminator = ODOMETRY;
@@ -200,6 +204,16 @@ task(int task_id, int speed, int triggers, ...)
 				    task_id = T_FINISHED;
 				}
 			}
+			if(triggers & NIR_L)
+			{
+				//printf("Value of ze distance2: %f\n", read_irsensor_distance(0));
+				//printf("Argument of NIR_L: %f\n", ir_distance[0]);
+			    if(!is_closer_than(0, ir_distance[0]))
+				{
+				    terminator = NIR_L;
+				    task_id = T_FINISHED;
+				}
+			}
 
 		    if(task_id != T_FOLLOW_WALL)
 			{
@@ -222,6 +236,10 @@ task(int task_id, int speed, int triggers, ...)
 		    off_center_turn(speed, current_odometry.angle,
 			   task_data.goal_distance, task_data.start_angle);
 		    break;
+		case T_ROCTURN:
+		    off_center_turn_reverse(speed, current_odometry.angle,
+			   task_data.goal_distance, task_data.start_angle);
+		    break;
 		case T_REVERSE:
 		    reverse(speed, &task_data);
 		    break;
@@ -232,22 +250,22 @@ task(int task_id, int speed, int triggers, ...)
 		    in.speed_right->updated = 1;
 		    break;
 		case T_FOLLOW_RIGHT:
-		    follow_line(GO_RIGHT, speed, BLACK_LINE);
+		    follow_line(GO_RIGHT, speed, BLACK_LINE, &task_data);
 		    break;
 		case T_FOLLOW_STRAIGHT:
-		    follow_line(GO_STRAIGHT, speed, BLACK_LINE);
+		    follow_line(GO_STRAIGHT, speed, BLACK_LINE, &task_data);
 		    break;
 		case T_FOLLOW_LEFT:
-		    follow_line(GO_LEFT, speed, BLACK_LINE);
+		    follow_line(GO_LEFT, speed, BLACK_LINE, &task_data);
 		    break;
 		case T_FOLLOW_WHITE_RIGHT:
-		    follow_line(GO_RIGHT, speed, WHITE_LINE);
+		    follow_line(GO_RIGHT, speed, WHITE_LINE, &task_data);
 		    break;
 		case T_FOLLOW_WHITE_STRAIGHT:
-		    follow_line(GO_STRAIGHT, speed, WHITE_LINE);
+		    follow_line(GO_STRAIGHT, speed, WHITE_LINE, &task_data);
 		    break;
 		case T_FOLLOW_WHITE_LEFT:
-		    follow_line(GO_LEFT, speed, WHITE_LINE);
+		    follow_line(GO_LEFT, speed, WHITE_LINE, &task_data);
 		    break;
 		case T_FOLLOW_WALL:
 
@@ -256,20 +274,20 @@ task(int task_id, int speed, int triggers, ...)
 			    ir_updated = 0;
 			}
 			
-			//Input interval is: 10..30
+			//Input interval is: 10..50
 			//Output interval is: 0..2
-			//Transformation is: (in-10)/20 * 2
-			double final_value = 7-((read_irsensor_distance(0)*100.-10.)/20. * 2.+2.5);
+			//Transformation is: (in-10)/40 * 2
+			double final_value = 7-((read_irsensor_distance(0)*100.-10.)/60. * 2.+2.5);
 
-			if (final_value < 2.5) final_value = 2.5;
-			if (final_value > 4.5) final_value = 4.5;
+			if (final_value < 3.1) final_value = 3.1;
+			if (final_value > 3.9) final_value = 3.9;
 
-			printf("Value of ze distance: %f\n", read_irsensor_distance(0));
-			printf("Value of ze final value: %f\n", final_value);
+			//printf("Value of ze distance: %f\n", read_irsensor_distance(0));
+			//printf("Value of ze final value: %f\n", final_value);
 
 			double line[2];
 			line[0] = line[1] = final_value;
-			line_speed_calculation(GO_STRAIGHT, speed, LINE_SINGLE, line);
+			line_speed_calculation(GO_STRAIGHT, speed, LINE_SINGLE, line, &task_data);
 		case T_STOP:
 //		    printf("STOP\n");
 		    break;
@@ -309,7 +327,7 @@ task(int task_id, int speed, int triggers, ...)
 
     //Cleanup!
     va_end(arguments);
-    printf("terminator: %d", terminator);
+    //printf("terminator: %d\n", terminator);
     return terminator;
 }
 
